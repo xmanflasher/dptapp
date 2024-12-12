@@ -1,52 +1,26 @@
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
+import '../widgets/widgets.dart';
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
-
+  const MyHomePage({super.key});
+  /*
   final String title;
-
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawerWidget(),
       appBar: AppBar(
-        title: Text(title),
+        title: const Text('Home'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: const Text('Drawer Header'),
-            ),
-            ListTile(
-              title: Text('Setting'),
-              onTap: () {
-                Navigator.pushNamed(context, '/setting');
-              },
-            ),ListTile(
-              title: Text('Record'),
-              onTap: () {
-                Navigator.pushNamed(context, '/record');
-              },
-            ),
-            ListTile(
-              title: Text('Receive'),
-              onTap: () {
-                Navigator.pushNamed(context, '/receive');
-              },
-            ),
-          ],
-        ),
-      ),
+      
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/record');
+            context.go('/record');
           },
-          child: const Text('Go to Record Page'),
+          child: const Text('testing'),
         ),
       ),
     );

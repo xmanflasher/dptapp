@@ -3,14 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/bloc.dart';
 import '../widgets/widgets.dart';
 
-class ReceivePage extends StatelessWidget {
-  const ReceivePage({super.key});
+class SyncrecordingPage extends StatelessWidget {
+  const SyncrecordingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawerWidget(),
       appBar: AppBar(
-        title: const Text('Receive Data'),
+        title: const Text('Syncrecording'),
       ),
       body: BlocBuilder<BluetoothBloc, BluetoothState>(
         builder: (context, state) {
