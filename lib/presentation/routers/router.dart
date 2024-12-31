@@ -1,3 +1,4 @@
+import 'package:dptapp/ini.dart';
 import 'package:go_router/go_router.dart';
 import '../pages/pages.dart';
 
@@ -9,8 +10,8 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const MyHomePage(),
     ),
     GoRoute(
-      path: '/record',
-      builder: (context, state) => const RecordPage(),
+      path: '/records',
+      builder: (context, state) => RecordsPage(),
     ),
     GoRoute(
       path: '/settings',

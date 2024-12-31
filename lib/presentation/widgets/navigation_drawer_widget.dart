@@ -27,9 +27,9 @@ class NavigationDrawerWidget extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Record'),
+            title: const Text('Records'),
             onTap: () {
-              context.go('/record');
+              context.go('/records');
             },
           ),
           ListTile(

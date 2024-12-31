@@ -9,6 +9,8 @@ class Env {
 }
 
 class AppIni {
+  static String currentEnv = Env.mock; // Default to mock environment
+
   static Future<void> initializeHive() async {
     await Hive.initFlutter();
     await Hive.openBox('timerBox');
@@ -17,12 +19,12 @@ class AppIni {
   static Future<String> configureDependencies() async {
     // Here you can add logic to determine the environment
     // For example, you can read from a configuration file or environment variables
-    // For simplicity, we'll just return the dev environment
-    const currentEnv = Env.dev;
-
+    // For simplicity, we'll just set the dev environment
+    currentEnv = Env.mock;
     // Initialize Hive
     await initializeHive();
 
     return currentEnv;
   }
+  
 }
