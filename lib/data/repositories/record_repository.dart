@@ -14,6 +14,7 @@ class RecordRepositoryImpl implements RecordRepository {
         case Env.mock:
           // Fetch records from CSV data source
           final List<List<dynamic>> data =
+              //await TxtReader().readTxt('test_data/Activities_untitle.txt');
               await CsvReader().readCsv('test_data/Activities_untitle.csv');
           return data.map((record) => Record.fromCsv(record)).toList();
         case Env.dev:
@@ -38,6 +39,7 @@ class RecordRepositoryImpl implements RecordRepository {
         case Env.mock:
           // Fetch record by id from CSV data source
           final List<List<dynamic>> data =
+              //await TxtReader().readTxt('assets/data/records.csv');
               await CsvReader().readCsv('assets/data/records.csv');
           return data
               .map((record) => Record.fromCsv(record))

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:dptapp/core/extensions/date_extensions.dart';
 
 class Record extends Equatable {
   final String id;
@@ -59,9 +60,12 @@ class Record extends Equatable {
   factory Record.fromCsv(List<dynamic> csv) {
   try {
     return Record(
-      id: csv[0] as String,
+      //temp records row data id dosent exist
+      id: csv[0].toString(),
       activityType: csv[1] as String,
-      date: DateTime.parse(csv[2] as String),
+      //date: DateTime.parse(csv[2] as String),
+      //temp flexibleParseDate need review
+      date: ((csv[2] as String).flexibleParseDate()) ?? DateTime.now(),
       favorite: csv[3] == 'true',
       title: csv[4] as String,
       distance: double.tryParse(csv[5].toString()) ?? 0.0, // 避免解析錯誤
