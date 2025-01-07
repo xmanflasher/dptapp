@@ -21,5 +21,11 @@ final GoRouter router = GoRouter(
       path: '/syncrecording',
       builder: (context, state) => const SyncrecordingPage(),
     ),
+    /*
+    GoRoute(
+      path: '/record_detail',
+      builder: (context, state) => const RecordDetailPage(),
+    ),
+    */
   ],
 );
