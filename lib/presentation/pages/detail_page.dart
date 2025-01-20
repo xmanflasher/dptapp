@@ -1,221 +1,294 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:dptapp/presentation/resources/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../data/repositories/detail_repository.dart';
-import '../../domain/entitis/detail.dart';
-import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
-import 'package:dptapp/presentation/pages/pages.dart';
 
-//先確定資料串進後再修UI方便測試
 class DetailPage extends StatefulWidget {
+  const DetailPage({super.key});
+
   @override
-  _DetailPageState createState() => _DetailPageState();
+  State<DetailPage> createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
-  late Future<List<Detail>> _detailFuture;
+  List<Color> gradientColors = [
+    AppColors.contentColorCyan,
+    AppColors.contentColorBlue,
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    _detailFuture = DetailRepositoryImpl().getAllDetail();
-  }
+  bool showAvg = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Detail'),
-      ),
-      drawer: NavigationDrawerWidget(), // Add the NavigationDrawerWidget here
-      body: FutureBuilder<List<Detail>>(
-          future: _detailFuture,
-          builder: (context, snapshot) {
-            return SingleChildScrollView(
-              /*
-              scrollDirection: Axis.vertical,
-              */
-              child: PaginatedDataTable(
-                header: Text('Detail'),
-                columns: [
-                  DataColumn(label: Text('Time')),
-                  DataColumn(label: Text('Speed')),
-                  DataColumn(label: Text('ID')),
-                  DataColumn(label: Text('Intensity')),
-                  DataColumn(label: Text('AvgSpeed')),
-                  
-                  DataColumn(label: Text('Actions')), // Add Actions column
-                  
-                ],
-                source: DetailDataSource(snapshot.data!, context),
-                rowsPerPage: 10,
-                columnSpacing: 10,
-                showCheckboxColumn: false,
+    return Stack(
+      children: <Widget>[
+        AspectRatio(
+          aspectRatio: 1.70,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              right: 18,
+              left: 12,
+              top: 24,
+              bottom: 12,
+            ),
+            child: LineChart(
+              showAvg ? avgData() : mainData(),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 60,
+          height: 34,
+          child: TextButton(
+            onPressed: () {
+              setState(() {
+                showAvg = !showAvg;
+              });
+            },
+            child: Text(
+              'avg',
+              style: TextStyle(
+                fontSize: 12,
+                color: showAvg
+                    ? Colors.white.withValues(alpha: 0.5)
+                    : Colors.white,
               ),
-            );
-          }),
+            ),
+          ),
+        ),
+      ],
     );
   }
-}
-//先確定資料串進後再修UI方便測試
-class DetailDataSource extends DataTableSource {
-  final List<Detail> details;
-  final BuildContext context;
 
-  DetailDataSource(this.details, this.context);
-
-  @override
-  DataRow getRow(int index) {
-    if (index >= details.length) {
-      print("Index out of range: $index"); // 或抛出异常
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 2:
+        text = const Text('MAR', style: style);
+        break;
+      case 5:
+        text = const Text('JUN', style: style);
+        break;
+      case 8:
+        text = const Text('SEP', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
     }
-    final detail = details[index];
-    return DataRow(cells: [
-      DataCell(Text(detail.time.toString())),
-      DataCell(Text(detail.speed.toString())),
-      DataCell(Text(detail.id.toString())),
-      DataCell(Text(detail.intensity.toString())),
-      DataCell(Text(detail.avgSpeed.toString())),
-      
-      DataCell(
-        TextButton(
-          onPressed: () {
-            // Navigate to detail page or perform any action
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SettingsPage(),
-              ),
-            );
-          },
-          child: Text('Detail'),
-        ),
-      ),
-      
-    ]);
-  }
 
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => details.length;
-
-  @override
-  int get selectedRowCount => 0;
-}
-/*
-// Dummy DetailPage for demonstration
-class DetailPage extends StatelessWidget {
-  final Record record;
-
-  DetailPage({required this.record});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Record Details'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Title: ${record.title}'),
-            Text('Activity Type: ${record.activityType}'),
-            Text('Date: ${record.date}'),
-            Text('Distance: ${record.distance}'),
-            Text('Calories Burned: ${record.caloriesBurned}'),
-            // Add more details as needed
-          ],
-        ),
-      ),
+    return SideTitleWidget(
+      meta: meta,
+      child: text,
     );
   }
-}
-*/
 
-/*
-import 'package:dptapp/presentation/pages/pages.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../../data/repositories/record_repository.dart';
-import '../../domain/entitis/records.dart';
-import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 15,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 1:
+        text = '10K';
+        break;
+      case 3:
+        text = '30k';
+        break;
+      case 5:
+        text = '50k';
+        break;
+      default:
+        return Container();
+    }
 
-class RecordsPage extends StatefulWidget {
-  @override
-  _RecordsPageState createState() => _RecordsPageState();
-}
-
-class _RecordsPageState extends State<RecordsPage> {
-  late Future<List<Record>> _recordsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _recordsFuture = RecordRepositoryImpl().getAllRecords();
+    return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Records'),
-      ),
-      drawer: NavigationDrawerWidget(), // Add the NavigationDrawerWidget here
-      body: FutureBuilder<List<Record>>(
-        future: _recordsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No records found.'));
-          } else {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Title')),
-                  DataColumn(label: Text('Activity Type')),
-                  DataColumn(label: Text('Date')),
-                  DataColumn(label: Text('Distance')),
-                  DataColumn(label: Text('Calories Burned')),
-                  DataColumn(label: Text('Details')),
-                ],
-                rows: snapshot.data!.map((record) {
-                  return DataRow(cells: [
-                    DataCell(Text(record.title)),
-                    DataCell(Text(record.activityType)),
-                    DataCell(Text(record.date.toString())),
-                    DataCell(Text(record.distance.toString())),
-                    DataCell(Text(record.caloriesBurned.toString())),
-                       DataCell(
-                        TextButton(
-                          onPressed: () {
-                            // Navigate to detail page or perform any action
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SettingsPage(),
-                              ),
-                            );
-                          },
-                          child: Text('Details'),
-                        ),
-                      ),                   
-                  ]);
-                }).toList(),
-              ),
-            )
-            );
-          }
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
         },
       ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: 0,
+      maxX: 11,
+      minY: 0,
+      maxY: 6,
+      lineBarsData: [
+        LineChartBarData(
+          spots: const [
+            FlSpot(0, 3),
+            FlSpot(2.6, 2),
+            FlSpot(4.9, 5),
+            FlSpot(6.8, 3.1),
+            FlSpot(8, 4),
+            FlSpot(9.5, 3),
+            FlSpot(11, 4),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withValues(alpha: 0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  LineChartData avgData() {
+    return LineChartData(
+      lineTouchData: const LineTouchData(enabled: false),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        verticalInterval: 1,
+        horizontalInterval: 1,
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: bottomTitleWidgets,
+            interval: 1,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+            interval: 1,
+          ),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: 0,
+      maxX: 11,
+      minY: 0,
+      maxY: 6,
+      lineBarsData: [
+        LineChartBarData(
+          spots: const [
+            FlSpot(0, 3.44),
+            FlSpot(2.6, 3.44),
+            FlSpot(4.9, 3.44),
+            FlSpot(6.8, 3.44),
+            FlSpot(8, 3.44),
+            FlSpot(9.5, 3.44),
+            FlSpot(11, 3.44),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: [
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+            ],
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: [
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withValues(alpha: 0.1),
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withValues(alpha: 0.1),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
-*/
