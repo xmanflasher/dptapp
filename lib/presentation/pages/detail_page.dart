@@ -1,6 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dptapp/presentation/resources/app_colors.dart';
 import 'package:flutter/material.dart';
+import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
+import '../../data/repositories/detail_repository.dart';
+import '../../domain/entitis/detail.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -9,56 +12,114 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _DetailPageState extends State<DetailPage>
+    with SingleTickerProviderStateMixin {
   List<Color> gradientColors = [
     AppColors.contentColorCyan,
     AppColors.contentColorBlue,
   ];
 
   bool showAvg = false;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this); // 初始化 TabController
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose(); // 銷毀 TabController
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1.70,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 24,
-              bottom: 12,
-            ),
-            child: LineChart(
-              showAvg ? avgData() : mainData(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Detail Page'),
+      ),
+      drawer: NavigationDrawerWidget(), // Add the NavigationDrawerWidget here
+      body: Column(
+        children: [
+          // 上半部分顯示圖表
+          Expanded(
+            flex: 2, // 分配較大的空間給圖表
+            child: Stack(
+              children: <Widget>[
+                AspectRatio(
+                  aspectRatio: 1.70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 18,
+                      left: 12,
+                      top: 24,
+                      bottom: 12,
+                    ),
+                    child: LineChart(
+                      showAvg ? avgData() : mainData(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 60,
+                  height: 34,
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        showAvg = !showAvg;
+                      });
+                    },
+                    child: Text(
+                      'avg',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: showAvg
+                            ? Colors.white.withOpacity(0.5)
+                            : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        SizedBox(
-          width: 60,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                showAvg = !showAvg;
-              });
-            },
-            child: Text(
-              'avg',
-              style: TextStyle(
-                fontSize: 12,
-                color: showAvg
-                    ? Colors.white.withValues(alpha: 0.5)
-                    : Colors.white,
-              ),
+          // 下半部分顯示 TabBar 和 TabBarView
+          Expanded(
+            flex: 1, // 分配較小的空間給 TabBar 和內容
+            child: Column(
+              children: [
+                TabBar(
+                  controller: _tabController,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: AppColors.contentColorCyan,
+                  tabs: const [
+                    Tab(text: '統計數據'),
+                    Tab(text: '分趟數據'),
+                    Tab(text: '心肺區間'),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      Center(child: Text('統計數據內容')),
+                      Center(child: Text('分趟數據內容')),
+                      Center(child: Text('心肺區間內容')),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
+  // 以下方法保持不變，主要用於圖表的設置
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -186,7 +247,7 @@ class _DetailPageState extends State<DetailPage> {
             show: true,
             gradient: LinearGradient(
               colors: gradientColors
-                  .map((color) => color.withValues(alpha: 0.3))
+                  .map((color) => color.withOpacity(0.3))
                   .toList(),
             ),
           ),
@@ -280,10 +341,10 @@ class _DetailPageState extends State<DetailPage> {
               colors: [
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
                     .lerp(0.2)!
-                    .withValues(alpha: 0.1),
+                    .withOpacity(0.1),
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
                     .lerp(0.2)!
-                    .withValues(alpha: 0.1),
+                    .withOpacity(0.1),
               ],
             ),
           ),
