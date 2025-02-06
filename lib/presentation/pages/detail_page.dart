@@ -21,11 +21,14 @@ class _DetailPageState extends State<DetailPage>
 
   bool showAvg = false;
   late TabController _tabController;
+  late Future<List<Detail>> _detailFuture;
+  List<Detail> details = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this); // 初始化 TabController
+    _detailFuture = DetailRepositoryImpl().getAllDetail();
   }
 
   @override
@@ -41,7 +44,19 @@ class _DetailPageState extends State<DetailPage>
         title: const Text('Detail Page'),
       ),
       drawer: NavigationDrawerWidget(), // Add the NavigationDrawerWidget here
-      body: Column(
+      body: FutureBuilder<List<Detail>>(
+        future: _detailFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No details found.'));
+          } else {
+            details = snapshot.data!;
+            return
+            Column(
         children: [
           // 上半部分顯示圖表
           Expanded(
@@ -58,10 +73,11 @@ class _DetailPageState extends State<DetailPage>
                       bottom: 12,
                     ),
                     child: LineChart(
-                      showAvg ? avgData() : mainData(),
+                      mainData(),
                     ),
                   ),
                 ),
+                /*
                 SizedBox(
                   width: 60,
                   height: 34,
@@ -82,6 +98,7 @@ class _DetailPageState extends State<DetailPage>
                     ),
                   ),
                 ),
+                */
               ],
             ),
           ),
@@ -109,18 +126,22 @@ class _DetailPageState extends State<DetailPage>
                       Center(child: Text('分趟數據內容')),
                       Center(child: Text('心肺區間內容')),
                     ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }
 
   // 以下方法保持不變，主要用於圖表的設置
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+
+  Widget bottomTitleWidgets_O(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 16,
@@ -146,6 +167,23 @@ class _DetailPageState extends State<DetailPage>
       child: text,
     );
   }
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  const style = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 12,
+  );
+
+  // 假設 value 是秒數，轉換成 mm:ss
+  int totalSeconds = value.toInt();
+  int minutes = totalSeconds ~/ 60;
+  int seconds = totalSeconds % 60;
+  String formattedTime = '$minutes:${seconds.toString().padLeft(2, '0')}';
+
+  return SideTitleWidget(
+    meta: meta,
+    child: Text(formattedTime, style: style),
+  );
+}
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -202,16 +240,16 @@ class _DetailPageState extends State<DetailPage>
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            interval: 1,
+            maxIncluded: false,
             getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 60,
+            maxIncluded: false,
+            minIncluded: false,
           ),
         ),
       ),
@@ -220,20 +258,17 @@ class _DetailPageState extends State<DetailPage>
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: details.length.toDouble() - 1,
       minY: 0,
-      maxY: 6,
+      maxY: details.map((detail) => detail.speed ?? 0).reduce((a, b) => a > b ? a : b),
+      //maxY: details.map((detail) => detail.speed).reduce((a, b) => a > b ? a : b),
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: details
+              .asMap()
+              .entries
+              .map((entry) => FlSpot(entry.key.toDouble(), entry.value.speed?.toDouble() ?? 0))
+              .toList(),
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
@@ -256,6 +291,7 @@ class _DetailPageState extends State<DetailPage>
     );
   }
 
+/*
   LineChartData avgData() {
     return LineChartData(
       lineTouchData: const LineTouchData(enabled: false),
@@ -302,54 +338,7 @@ class _DetailPageState extends State<DetailPage>
           sideTitles: SideTitles(showTitles: false),
         ),
       ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-            ],
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: [
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
+  */
 }
