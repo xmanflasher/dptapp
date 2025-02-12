@@ -31,6 +31,31 @@ class DetailRepositoryImpl implements DetailRepository {
   }
 
   @override
+  Future<List<Detail>> getDetailByDate(DateTime activityRecordDate) async {
+    try {
+      switch (AppIni.currentEnv) {
+        case Env.mock:
+          // Fetch detail from CSV data source
+          final List<List<dynamic>> data =
+              //await TxtReader().readTxt('test_data/Activities_untitle.txt');
+              await CsvReader().readCsv('test_data/garmindata_800csv.csv');
+          return data.map((detail) => Detail.fromCsvMap(detail,activityRecordDate)).toList();
+        case Env.dev:
+        case Env.sit:
+          // Fetch detail from Hive data source
+          var box = await Hive.openBox('detailBox');
+          return box.values.map((detail) => Detail.fromHive(detail)).toList();
+        default:
+          throw Exception("Unsupported environment");
+      }
+    } catch (e, stackTrace) {
+      print("Error loading detail: $e");
+      print(stackTrace);
+      return [Detail.defaultDetail];
+    }
+  }
+  
+  @override
   Future<Detail> getDetailById(String id) async {
     try {
       switch (AppIni.currentEnv) {

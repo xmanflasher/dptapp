@@ -18,8 +18,8 @@ class TxtReader {
     try {
       // Read the entire file content
       final file = File(filePath);
-      final content = await file.readAsString();
-
+      //final content = await file.readAsString();
+      final content = await rootBundle.loadString(filePath);
       // Split the content into lines
       final lines = content.split('\n');
 

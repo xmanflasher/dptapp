@@ -119,7 +119,56 @@ class Detail extends Equatable {
       throw FormatException("Invalid CSV format: $csv, Error: $e");
     }
   }
-
+// Factory method to create a Record from CSV data matching the activityRecordDate
+  factory Detail.fromCsvMap(List<dynamic> csv, DateTime activityRecordDate) {
+    try {
+      // 比對 activityRecordDate 與 csv 中的日期
+      DateTime recordDate = (csv[1] as String).flexibleParseDate() ?? DateTime.now();
+      //if (recordDate.toIso8601String().split('T').first != activityRecordDate) {
+      if (recordDate != activityRecordDate) {
+        throw FormatException("Date does not match: $activityRecordDate");
+      }
+      return Detail(
+        sport: csv[0] as String,
+        id: csv[1] as String,
+        startTime: ((csv[2] as String).flexibleParseDate()) ?? DateTime.now(),
+        totalTimeSeconds: (csv[3] as num).toDouble(),
+        distanceMeters: (csv[4] as num).toDouble(),
+        maximumSpeed: (csv[5] as num).toDouble(),
+        calories: csv[6] as int,
+        value: (csv[7] as num).toDouble(),
+        value2: (csv[8] as num).toDouble(),
+        intensity: csv[9] as String,
+        triggerMethod: csv[10] as String,
+        time: ((csv[11] as String).flexibleParseDate()) ?? DateTime.now(),
+        distanceMeters3: (csv[12] as num).toDouble(),
+        value4: (csv[13] as num).toDouble(),
+        //speed空值在garmin connect以0.0填充
+        speed: parseNullableSpeed(csv[14])?.toDouble(),
+        //latitudeDegrees: (csv[15] as num).toDouble(),
+        latitudeDegrees: parseNullableNum(csv[15])?.toDouble(),
+        longitudeDegrees: parseNullableNum(csv[16])?.toDouble(),
+        altitudeMeters: parseNullableNum(csv[17])?.toDouble(),
+        avgSpeed: (csv[18] as num).toDouble(),
+        name: csv[19] as String,
+        unitId: csv[20] as int,
+        productId: csv[21] as int,
+        versionMajor: csv[22] as int,
+        versionMinor: csv[23] as int,
+        buildMajor: csv[24] as int,
+        buildMinor: csv[25] as int,
+        name5: csv[26] as String,
+        versionMajor6: csv[27] as int,
+        versionMinor7: csv[28] as int,
+        buildMajor8: csv[29] as int,
+        buildMinor9: csv[30] as int,
+        langId: csv[31] as String,
+        partNumber: csv[32] as String,
+      );
+    } catch (e) {
+      throw FormatException("Invalid CSV format: $csv, Error: $e");
+    }
+  }
   // Factory method to create a Record from Hive data
   factory Detail.fromHive(Map<String, dynamic> hive) {
     return Detail(

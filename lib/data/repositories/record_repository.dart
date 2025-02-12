@@ -3,8 +3,8 @@ import '../../domain/entitis/records.dart';
 import '../../domain/repositories/record_repository.dart';
 import 'package:dptapp/presentation/widgets/file_reader.dart';
 import 'package:hive/hive.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+//import 'dart:convert';
+//import 'package:flutter/services.dart' show rootBundle;
 
 class RecordRepositoryImpl implements RecordRepository {
   @override
@@ -14,8 +14,9 @@ class RecordRepositoryImpl implements RecordRepository {
         case Env.mock:
           // Fetch records from CSV data source
           final List<List<dynamic>> data =
-              //await TxtReader().readTxt('test_data/Activities_untitle.txt');
-              await CsvReader().readCsv('test_data/Activities_untitle.csv');
+              await TxtReader().readTxt('test_data/Activities_untitle.txt');
+              //await TxtReader().readTxt('D:/project/dptapp/assets/test_data/Activities.txt');
+              //await CsvReader().readCsv('test_data/Activities_untitle.csv');
           return data.map((record) => Record.fromCsv(record)).toList();
         case Env.dev:
         case Env.sit:
