@@ -6,7 +6,8 @@ import '../../data/repositories/detail_repository.dart';
 import '../../domain/entitis/detail.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({super.key});
+  final DateTime activityRecordDate;
+  const DetailPage(this.activityRecordDate, {super.key});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -28,7 +29,9 @@ class _DetailPageState extends State<DetailPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this); // 初始化 TabController
-    _detailFuture = DetailRepositoryImpl().getAllDetail();
+    //_detailFuture = DetailRepositoryImpl().getAllDetail();
+    _detailFuture =
+        DetailRepositoryImpl().getDetailByDate(widget.activityRecordDate);
   }
 
   @override
@@ -55,29 +58,29 @@ class _DetailPageState extends State<DetailPage>
             return Center(child: Text('No details found.'));
           } else {
             details = snapshot.data!;
-            return
-            Column(
-        children: [
-          // 上半部分顯示圖表
-          Expanded(
-            flex: 2, // 分配較大的空間給圖表
-            child: Stack(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.70,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 18,
-                      left: 12,
-                      top: 24,
-                      bottom: 12,
-                    ),
-                    child: LineChart(
-                      mainData(),
-                    ),
-                  ),
-                ),
-                /*
+            return Column(
+              children: [
+                // 上半部分顯示圖表
+                Expanded(
+                  flex: 2, // 分配較大的空間給圖表
+                  child: Stack(
+                    children: <Widget>[
+                      AspectRatio(
+                        aspectRatio: 1.70,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            right: 18,
+                            left: 12,
+                            top: 24,
+                            bottom: 12,
+                          ),
+                          child: LineChart(
+                            mainData(),
+                          ),
+                        ),
+                      ),
+                      /*
+                //範例按鍵:切換圖表
                 SizedBox(
                   width: 60,
                   height: 34,
@@ -99,33 +102,33 @@ class _DetailPageState extends State<DetailPage>
                   ),
                 ),
                 */
-              ],
-            ),
-          ),
-          // 下半部分顯示 TabBar 和 TabBarView
-          Expanded(
-            flex: 1, // 分配較小的空間給 TabBar 和內容
-            child: Column(
-              children: [
-                TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: AppColors.contentColorCyan,
-                  tabs: const [
-                    Tab(text: '統計數據'),
-                    Tab(text: '分趟數據'),
-                    Tab(text: '心肺區間'),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      Center(child: Text('統計數據內容')),
-                      Center(child: Text('分趟數據內容')),
-                      Center(child: Text('心肺區間內容')),
                     ],
+                  ),
+                ),
+                // 下半部分顯示 TabBar 和 TabBarView
+                Expanded(
+                  flex: 1, // 分配較小的空間給 TabBar 和內容
+                  child: Column(
+                    children: [
+                      TabBar(
+                        controller: _tabController,
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.grey,
+                        indicatorColor: AppColors.contentColorCyan,
+                        tabs: const [
+                          Tab(text: '統計數據'),
+                          Tab(text: '分趟數據'),
+                          Tab(text: '心肺區間'),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            Center(child: Text('統計數據內容')),
+                            Center(child: Text('分趟數據內容')),
+                            Center(child: Text('心肺區間內容')),
+                          ],
                         ),
                       ),
                     ],
@@ -140,7 +143,8 @@ class _DetailPageState extends State<DetailPage>
   }
 
   // 以下方法保持不變，主要用於圖表的設置
-
+/*
+//原範例
   Widget bottomTitleWidgets_O(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -167,24 +171,26 @@ class _DetailPageState extends State<DetailPage>
       child: text,
     );
   }
+  */
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  const style = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 12,
-  );
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 12,
+    );
 
-  // 假設 value 是秒數，轉換成 mm:ss
-  int totalSeconds = value.toInt();
-  int minutes = totalSeconds ~/ 60;
-  int seconds = totalSeconds % 60;
-  String formattedTime = '$minutes:${seconds.toString().padLeft(2, '0')}';
+    // 假設 value 是秒數，轉換成 mm:ss
+    int totalSeconds = value.toInt();
+    int minutes = totalSeconds ~/ 60;
+    int seconds = totalSeconds % 60;
+    String formattedTime = '$minutes:${seconds.toString().padLeft(2, '0')}';
 
-  return SideTitleWidget(
-    meta: meta,
-    child: Text(formattedTime, style: style),
-  );
-}
+    return SideTitleWidget(
+      meta: meta,
+      child: Text(formattedTime, style: style),
+    );
+  }
 
+/*
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -207,9 +213,27 @@ class _DetailPageState extends State<DetailPage>
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
-
+*/
   LineChartData mainData() {
     return LineChartData(
+      //TouchData
+      lineTouchData: LineTouchData(
+        enabled: true,
+        touchTooltipData: LineTouchTooltipData(
+          //getTooltipColor: (spot) => AppColors.mainTooltipBgColor,
+          tooltipBorder: BorderSide(color: AppColors.tooltipBgColor),
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            return touchedSpots.map((spot) {
+              return LineTooltipItem(
+                '${spot.y.toStringAsFixed(2)} km/h',
+                const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              );
+            }).toList();
+          },
+        ),
+        handleBuiltInTouches: true,
+      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -260,14 +284,17 @@ class _DetailPageState extends State<DetailPage>
       minX: 0,
       maxX: details.length.toDouble() - 1,
       minY: 0,
-      maxY: details.map((detail) => detail.speed ?? 0).reduce((a, b) => a > b ? a : b),
+      maxY: details
+          .map((detail) => detail.speed ?? 0)
+          .reduce((a, b) => a > b ? a : b),
       //maxY: details.map((detail) => detail.speed).reduce((a, b) => a > b ? a : b),
       lineBarsData: [
         LineChartBarData(
           spots: details
               .asMap()
               .entries
-              .map((entry) => FlSpot(entry.key.toDouble(), entry.value.speed?.toDouble() ?? 0))
+              .map((entry) => FlSpot(
+                  entry.key.toDouble(), entry.value.speed?.toDouble() ?? 0))
               .toList(),
           isCurved: true,
           gradient: LinearGradient(
@@ -292,6 +319,7 @@ class _DetailPageState extends State<DetailPage>
   }
 
 /*
+//平均值範例
   LineChartData avgData() {
     return LineChartData(
       lineTouchData: const LineTouchData(enabled: false),

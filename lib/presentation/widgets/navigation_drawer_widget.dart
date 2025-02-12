@@ -35,7 +35,9 @@ class NavigationDrawerWidget extends StatelessWidget {
           ListTile(
             title: const Text('Detail'),
             onTap: () {
-              context.go('/detail');
+            //context.go('/detail');
+            //測試架構
+            context.go('/detail/${DateTime.now()}');
             },
           ),
           ListTile(

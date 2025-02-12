@@ -22,4 +22,7 @@ class AppColors {
   static const Color contentColorPink = Color(0xFFFF3AF2);
   static const Color contentColorRed = Color(0xFFE80054);
   static const Color contentColorCyan = Color(0xFF50E4FF);
+
+  static const Color mainTooltipBgColor = Color(0xFF2E2E2E); // 深灰色背景
+  static const Color tooltipBgColor = Colors.black87; // 新增的 tooltip 背景色
 }

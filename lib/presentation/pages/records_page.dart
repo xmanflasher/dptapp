@@ -3,6 +3,9 @@ import '../../data/repositories/record_repository.dart';
 import '../../domain/entitis/records.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import 'package:dptapp/presentation/pages/pages.dart';
+import 'package:dptapp/core/extensions/date_formatter.dart';
+import 'package:go_router/go_router.dart';
+
 class RecordsPage extends StatefulWidget {
   @override
   _RecordsPageState createState() => _RecordsPageState();
@@ -39,9 +42,8 @@ class _RecordsPageState extends State<RecordsPage> {
                   DataColumn(label: Text('Date')),
                   DataColumn(label: Text('Distance')),
                   DataColumn(label: Text('Calories Burned')),
-                  
+
                   DataColumn(label: Text('Actions')), // Add Actions column
-                  
                 ],
                 source: RecordDataSource(snapshot.data!, context),
                 rowsPerPage: 10,
@@ -66,28 +68,34 @@ class RecordDataSource extends DataTableSource {
       print("Index out of range: $index"); // 或抛出异常
     }
     final record = records[index];
+    // 使用 DateFormatter 格式化日期
+    // ActivityRecordDate mapping to detail page
+    var ActivityRecordDate = (record.date).toCustomFormat();
     return DataRow(cells: [
       DataCell(Text(record.title)),
       DataCell(Text(record.activityType)),
-      DataCell(Text(record.date.toString())),
+      //DataCell(Text(record.date.toString())),
+      DataCell(Text(ActivityRecordDate.toString())),
       DataCell(Text(record.distance.toString())),
       DataCell(Text(record.caloriesBurned.toString())),
-      
       DataCell(
         TextButton(
           onPressed: () {
-            // Navigate to detail page or perform any action
+// Navigate to detail page or perform any action
+            /*
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SettingsPage(),
+                builder: (context) => DetailPage(),
               ),
             );
+        */
+//contextgo('/detail');
+            context.go('/detail/${record.date}');
           },
           child: Text('Details'),
         ),
       ),
-      
     ]);
   }
 

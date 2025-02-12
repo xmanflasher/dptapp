@@ -22,8 +22,12 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const SyncrecordingPage(),
     ),
     GoRoute(
-      path: '/detail',
-      builder: (context, state) => DetailPage(),
+      path: '/detail/:activityRecordDate',
+      builder: (context, state) {
+        final activityRecordDate = state.pathParameters['activityRecordDate']!;
+        final activityRecordDateParsed = DateTime.parse(activityRecordDate);
+        return DetailPage(activityRecordDateParsed);
+      },
     ),
   ],
 );
