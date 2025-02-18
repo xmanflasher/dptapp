@@ -30,3 +30,5 @@ class DataReceived extends BluetoothEvent {
 class TurnOnBluetooth extends BluetoothEvent {}
 
 class TurnOffBluetooth extends BluetoothEvent {}
+
+class CheckBluetoothStatus extends BluetoothEvent {}

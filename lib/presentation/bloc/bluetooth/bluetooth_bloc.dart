@@ -36,5 +36,13 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
       _bluetoothService.turnOffBluetooth();
       emit(BluetoothOff());
     });
+
+    on<CheckBluetoothStatus>((event, emit) {
+      if (_bluetoothService.isBluetoothOn()) {
+        emit(BluetoothOn());
+      } else {
+        emit(BluetoothOff());
+      }
+    });
   }
 }

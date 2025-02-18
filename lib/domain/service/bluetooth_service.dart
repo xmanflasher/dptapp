@@ -37,4 +37,33 @@ class MyBluetoothService {
   void turnOffBluetooth() {
     // Implement turning off Bluetooth if needed
   }
+  bool isBluetoothOn() {
+    // Implement the logic to check if Bluetooth is on
+    return true; // Placeholder return value
+  }
 }
+
+/*
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
+class BluetoothService {
+  static final FlutterBluePlus _flutterBlue = FlutterBluePlus();
+
+  // 檢查藍牙是否開啟
+  static Future<bool> isBluetoothOn() async {
+    return await FlutterBluePlus.adapterState.first == BluetoothAdapterState.on;
+  }
+
+  // 切換藍牙開關（僅適用於 Android，iOS 需要用戶手動開啟藍牙）
+  static Future<void> toggleBluetooth(bool enable) async {
+    if (enable) {
+      await FlutterBluePlus.turnOn();
+    } else {
+      // Handle turning off Bluetooth manually as turnOff is deprecated
+      // Note: There is no direct replacement for turnOff in Android SDK 33
+      // You may need to guide the user to turn off Bluetooth manually
+      print('Please turn off Bluetooth manually.');
+    }
+  }
+}
+*/

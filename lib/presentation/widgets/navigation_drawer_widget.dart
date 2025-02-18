@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../bloc/bluetooth/bluetooth_bloc.dart';
 
-class NavigationDrawerWidget extends StatelessWidget {
+class NavigationDrawerWidget extends StatefulWidget {
+  @override
+  _NavigationDrawerWidgetState createState() => _NavigationDrawerWidgetState();
+}
+
+class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<BluetoothBloc>().add(CheckBluetoothStatus());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -20,11 +33,46 @@ class NavigationDrawerWidget extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
+          ExpansionTile(
             title: const Text('Settings'),
-            onTap: () {
-              context.go('/settings');
-            },
+            children: [
+              BlocBuilder<BluetoothBloc, BluetoothState>(
+                builder: (context, state) {
+                  bool isBluetoothOn = false;
+                  if (state is BluetoothOn) {
+                    isBluetoothOn = true;
+                  } else if (state is BluetoothOff) {
+                    isBluetoothOn = false;
+                  }
+
+                  return ListTile(
+                    title: Text('Bluetooth : ${isBluetoothOn ? "On" : "Off"}'),
+                    trailing: Switch(
+                      value: isBluetoothOn,
+                      onChanged: (value) {
+                        if (value) {
+                          context.read<BluetoothBloc>().add(TurnOnBluetooth());
+                        } else {
+                          context.read<BluetoothBloc>().add(TurnOffBluetooth());
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: const Text('Devices : 0'),
+                onTap: () {
+                  context.go('/settings/devices');
+                },
+              ),
+              ListTile(
+                title: const Text('Setting Page'),
+                onTap: () {
+                  context.go('/settings');
+                },
+              ),
+            ],
           ),
           ListTile(
             title: const Text('Records'),
@@ -35,9 +83,7 @@ class NavigationDrawerWidget extends StatelessWidget {
           ListTile(
             title: const Text('Detail'),
             onTap: () {
-            //context.go('/detail');
-            //測試架構
-            context.go('/detail/${DateTime.now()}');
+              context.go('/detail/${DateTime.now()}');
             },
           ),
           ListTile(
