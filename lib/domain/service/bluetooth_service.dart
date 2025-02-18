@@ -16,7 +16,8 @@ class MyBluetoothService {
     });
   }
 
-  void connectToDevice(BluetoothDevice device, void Function(List<int>) onDataReceived) async {
+  void connectToDevice(
+      BluetoothDevice device, void Function(List<int>) onDataReceived) async {
     await device.connect();
     List<BluetoothService> services = await device.discoverServices();
     for (BluetoothService service in services) {

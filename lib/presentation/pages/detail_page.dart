@@ -30,8 +30,7 @@ class _DetailPageState extends State<DetailPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this); // 初始化 TabController
     //_detailFuture = DetailRepositoryImpl().getAllDetail();
-    _detailFuture =
-        DetailRepositoryImpl().getDetailByDate(widget.activityRecordDate);
+    _detailFuture = DetailRepositoryImpl().getDetailByDate(widget.activityRecordDate);
   }
 
   @override
@@ -221,17 +220,18 @@ class _DetailPageState extends State<DetailPage>
         enabled: true,
         touchTooltipData: LineTouchTooltipData(
           //getTooltipColor: (spot) => AppColors.mainTooltipBgColor,
-          tooltipBorder: BorderSide(color: AppColors.tooltipBgColor),
-          getTooltipItems: (List<LineBarSpot> touchedSpots) {
-            return touchedSpots.map((spot) {
-              return LineTooltipItem(
-                '${spot.y.toStringAsFixed(2)} km/h',
-                const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
-              );
-            }).toList();
-          },
+        tooltipBorder: BorderSide(color: AppColors.tooltipBgColor),
+        getTooltipItems: (List<LineBarSpot> touchedSpots) {
+          return touchedSpots.map((spot) {
+            return LineTooltipItem(
+              '${spot.y.toStringAsFixed(2)} km/h',
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            );
+          }).toList();
+        },
+
         ),
+        
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(
