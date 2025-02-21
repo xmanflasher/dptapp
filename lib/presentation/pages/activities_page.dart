@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
-import '../../data/repositories/record_repository.dart';
-import '../../domain/entitis/records.dart';
+import '../../data/repositories/activity_repository.dart';
+import '../../domain/entitis/activities.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import 'package:dptapp/presentation/pages/pages.dart';
 import 'package:dptapp/core/extensions/date_formatter.dart';
 import 'package:go_router/go_router.dart';
 
-class RecordsPage extends StatefulWidget {
+class ActivitiesPage extends StatefulWidget {
   @override
-  _RecordsPageState createState() => _RecordsPageState();
+  _ActivitiesPageState createState() => _ActivitiesPageState();
 }
 
-class _RecordsPageState extends State<RecordsPage> {
-  late Future<List<Record>> _recordsFuture;
+class _ActivitiesPageState extends State<ActivitiesPage> {
+  late Future<List<Activity>> _activitiesFuture;
 
   @override
   void initState() {
     super.initState();
-    _recordsFuture = RecordRepositoryImpl().getAllRecords();
+    _activitiesFuture = ActivityRepositoryImpl().getAllActivities();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Records'),
+        title: Text('Activities'),
       ),
       drawer: NavigationDrawerWidget(), // Add the NavigationDrawerWidget here
-      body: FutureBuilder<List<Record>>(
-          future: _recordsFuture,
+      body: FutureBuilder<List<Activity>>(
+          future: _activitiesFuture,
           builder: (context, snapshot) {
             return SingleChildScrollView(
               /*
               scrollDirection: Axis.vertical,
               */
               child: PaginatedDataTable(
-                header: Text('Records'),
+                header: Text('Activities'),
                 columns: [
                   DataColumn(label: Text('Title')),
                   DataColumn(label: Text('Activity Type')),
@@ -45,7 +45,7 @@ class _RecordsPageState extends State<RecordsPage> {
 
                   DataColumn(label: Text('Actions')), // Add Actions column
                 ],
-                source: RecordDataSource(snapshot.data!, context),
+                source: ActivityDataSource(snapshot.data!, context),
                 rowsPerPage: 10,
                 columnSpacing: 10,
                 showCheckboxColumn: false,
@@ -55,29 +55,29 @@ class _RecordsPageState extends State<RecordsPage> {
     );
   }
 }
-
-class RecordDataSource extends DataTableSource {
-  final List<Record> records;
+class ActivityDataSource extends DataTableSource {
+  
+  final List<Activity> activities;
   final BuildContext context;
 
-  RecordDataSource(this.records, this.context);
+  ActivityDataSource(this.activities, this.context);
 
   @override
   DataRow getRow(int index) {
-    if (index >= records.length) {
+    if (index >= activities.length) {
       print("Index out of range: $index"); // 或抛出异常
     }
-    final record = records[index];
+    final activity = activities[index];
     // 使用 DateFormatter 格式化日期
-    // ActivityRecordDate mapping to detail page
-    var ActivityRecordDate = (record.date).toCustomFormat();
+    // ActivityActivityDate mapping to detail page
+    var ActivityActivityDate = (activity.date).toCustomFormat();
     return DataRow(cells: [
-      DataCell(Text(record.title)),
-      DataCell(Text(record.activityType)),
-      //DataCell(Text(record.date.toString())),
-      DataCell(Text(ActivityRecordDate.toString())),
-      DataCell(Text(record.distance.toString())),
-      DataCell(Text(record.caloriesBurned.toString())),
+      DataCell(Text(activity.title)),
+      DataCell(Text(activity.activityType)),
+      //DataCell(Text(activity.date.toString())),
+      DataCell(Text(ActivityActivityDate.toString())),
+      DataCell(Text(activity.distance.toString())),
+      DataCell(Text(activity.caloriesBurned.toString())),
       DataCell(
         TextButton(
           onPressed: () {
@@ -91,7 +91,7 @@ class RecordDataSource extends DataTableSource {
             );
         */
 //contextgo('/detail');
-            context.go('/detail/${record.date}');
+            context.go('/detail', extra: activity);
           },
           child: Text('Details'),
         ),
@@ -103,7 +103,7 @@ class RecordDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => records.length;
+  int get rowCount => activities.length;
 
   @override
   int get selectedRowCount => 0;
@@ -111,26 +111,26 @@ class RecordDataSource extends DataTableSource {
 /*
 // Dummy DetailPage for demonstration
 class DetailPage extends StatelessWidget {
-  final Record record;
+  final Activity activity;
 
-  DetailPage({required this.record});
+  DetailPage({required this.activity});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Record Details'),
+        title: Text('Activity Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Title: ${record.title}'),
-            Text('Activity Type: ${record.activityType}'),
-            Text('Date: ${record.date}'),
-            Text('Distance: ${record.distance}'),
-            Text('Calories Burned: ${record.caloriesBurned}'),
+            Text('Title: ${activity.title}'),
+            Text('Activity Type: ${activity.activityType}'),
+            Text('Date: ${activity.date}'),
+            Text('Distance: ${activity.distance}'),
+            Text('Calories Burned: ${activity.caloriesBurned}'),
             // Add more details as needed
           ],
         ),
@@ -144,40 +144,40 @@ class DetailPage extends StatelessWidget {
 import 'package:dptapp/presentation/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/repositories/record_repository.dart';
-import '../../domain/entitis/records.dart';
+import '../../data/repositories/activity_repository.dart';
+import '../../domain/entitis/activities.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 
-class RecordsPage extends StatefulWidget {
+class ActivitiesPage extends StatefulWidget {
   @override
-  _RecordsPageState createState() => _RecordsPageState();
+  _ActivitiesPageState createState() => _ActivitiesPageState();
 }
 
-class _RecordsPageState extends State<RecordsPage> {
-  late Future<List<Record>> _recordsFuture;
+class _ActivitiesPageState extends State<ActivitiesPage> {
+  late Future<List<Activity>> _activitiesFuture;
 
   @override
   void initState() {
     super.initState();
-    _recordsFuture = RecordRepositoryImpl().getAllRecords();
+    _activitiesFuture = ActivityRepositoryImpl().getAllActivities();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Records'),
+        title: Text('Activities'),
       ),
       drawer: NavigationDrawerWidget(), // Add the NavigationDrawerWidget here
-      body: FutureBuilder<List<Record>>(
-        future: _recordsFuture,
+      body: FutureBuilder<List<Activity>>(
+        future: _activitiesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No records found.'));
+            return Center(child: Text('No activities found.'));
           } else {
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -192,13 +192,13 @@ class _RecordsPageState extends State<RecordsPage> {
                   DataColumn(label: Text('Calories Burned')),
                   DataColumn(label: Text('Details')),
                 ],
-                rows: snapshot.data!.map((record) {
+                rows: snapshot.data!.map((activity) {
                   return DataRow(cells: [
-                    DataCell(Text(record.title)),
-                    DataCell(Text(record.activityType)),
-                    DataCell(Text(record.date.toString())),
-                    DataCell(Text(record.distance.toString())),
-                    DataCell(Text(record.caloriesBurned.toString())),
+                    DataCell(Text(activity.title)),
+                    DataCell(Text(activity.activityType)),
+                    DataCell(Text(activity.date.toString())),
+                    DataCell(Text(activity.distance.toString())),
+                    DataCell(Text(activity.caloriesBurned.toString())),
                        DataCell(
                         TextButton(
                           onPressed: () {
