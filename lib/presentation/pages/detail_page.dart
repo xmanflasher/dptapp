@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import '../../data/repositories/detail_repository.dart';
 import '../../domain/entitis/detail.dart';
+import '../../domain/entitis/activities.dart';
 
 class DetailPage extends StatefulWidget {
-  final DateTime activityRecordDate;
-  const DetailPage(this.activityRecordDate, {super.key});
+  //final DateTime activityActivityDate;
+  final Activity activity;
+  const DetailPage({Key? key, required this.activity}) : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -30,7 +32,8 @@ class _DetailPageState extends State<DetailPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this); // 初始化 TabController
     //_detailFuture = DetailRepositoryImpl().getAllDetail();
-    _detailFuture = DetailRepositoryImpl().getDetailByDate(widget.activityRecordDate);
+    _detailFuture =
+        DetailRepositoryImpl().getDetailByDate(widget.activity.date);
   }
 
   @override

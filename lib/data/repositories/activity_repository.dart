@@ -1,75 +1,75 @@
 import 'package:dptapp/ini.dart'; // Import ini.dart
-import '../../domain/entitis/records.dart';
+import '../../domain/entitis/activities.dart';
 import '../../domain/repositories/activity_repository.dart';
 import 'package:dptapp/presentation/widgets/file_reader.dart';
 import 'package:hive/hive.dart';
 //import 'dart:convert';
 //import 'package:flutter/services.dart' show rootBundle;
 
-class RecordRepositoryImpl implements RecordRepository {
+class ActivityRepositoryImpl implements ActivityRepository {
   @override
-  Future<List<Record>> getAllRecords() async {
+  Future<List<Activity>> getAllActivities() async {
     try {
       switch (AppIni.currentEnv) {
         case Env.mock:
-          // Fetch records from CSV data source
+          // Fetch activities from CSV data source
           final List<List<dynamic>> data =
               await TxtReader().readTxt('test_data/Activities_untitle.txt');
               //await TxtReader().readTxt('D:/project/dptapp/assets/test_data/Activities.txt');
               //await CsvReader().readCsv('test_data/Activities_untitle.csv');
-          return data.map((record) => Record.fromCsv(record)).toList();
+          return data.map((activity) => Activity.fromCsv(activity)).toList();
         case Env.dev:
         case Env.sit:
-          // Fetch records from Hive data source
-          var box = await Hive.openBox('recordsBox');
-          return box.values.map((record) => Record.fromHive(record)).toList();
+          // Fetch activities from Hive data source
+          var box = await Hive.openBox('activitiesBox');
+          return box.values.map((activity) => Activity.fromHive(activity)).toList();
         default:
           throw Exception("Unsupported environment");
       }
     } catch (e, stackTrace) {
-      print("Error loading records: $e");
+      print("Error loading activities: $e");
       print(stackTrace);
-      return [Record.defaultRecord];
+      return [Activity.defaultActivity];
     }
   }
 
   @override
-  Future<Record> getRecordById(String id) async {
+  Future<Activity> getActivityById(String id) async {
     try {
       switch (AppIni.currentEnv) {
         case Env.mock:
-          // Fetch record by id from CSV data source
+          // Fetch activity by id from CSV data source
           final List<List<dynamic>> data =
-              //await TxtReader().readTxt('assets/data/records.csv');
-              await CsvReader().readCsv('assets/data/records.csv');
+              //await TxtReader().readTxt('assets/data/activities.csv');
+              await CsvReader().readCsv('assets/data/activities.csv');
           return data
-              .map((record) => Record.fromCsv(record))
-              .firstWhere((record) => record.id == id);
+              .map((activity) => Activity.fromCsv(activity))
+              .firstWhere((activity) => activity.id == id);
         case Env.dev:
         case Env.sit:
-          // Fetch record by id from Hive data source
-          var box = await Hive.openBox('recordsBox');
-          return Record.fromHive(box.get(id));
+          // Fetch activity by id from Hive data source
+          var box = await Hive.openBox('activitiesBox');
+          return Activity.fromHive(box.get(id));
         default:
           throw Exception("Unsupported environment");
       }
     } catch (e) {
-      return Record.defaultRecord;
+      return Activity.defaultActivity;
     }
   }
 
   @override
-  Future<void> addRecord(Record record) async {
+  Future<void> addActivity(Activity activity) async {
     // Implement your data adding logic here
   }
 
   @override
-  Future<void> updateRecord(Record record) async {
+  Future<void> updateActivity(Activity activity) async {
     // Implement your data updating logic here
   }
 
   @override
-  Future<void> deleteRecord(String id) async {
+  Future<void> deleteActivity(String id) async {
     // Implement your data deleting logic here
   }
 }

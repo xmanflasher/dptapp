@@ -75,9 +75,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
             ],
           ),
           ListTile(
-            title: const Text('Records'),
+            title: const Text('Activities'),
             onTap: () {
-              context.go('/records');
+              context.go('/activities');
             },
           ),
           ListTile(

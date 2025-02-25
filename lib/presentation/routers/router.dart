@@ -1,6 +1,7 @@
 import 'package:dptapp/ini.dart';
 import 'package:go_router/go_router.dart';
 import '../pages/pages.dart';
+import '../../domain/entitis/activities.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',
@@ -10,8 +11,8 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const MyHomePage(),
     ),
     GoRoute(
-      path: '/records',
-      builder: (context, state) => RecordsPage(),
+      path: '/Activities',
+      builder: (context, state) => ActivitiesPage(),
     ),
     GoRoute(
       path: '/settings',
@@ -22,11 +23,10 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const SyncrecordingPage(),
     ),
     GoRoute(
-      path: '/detail/:activityRecordDate',
+      path: '/detail',
       builder: (context, state) {
-        final activityRecordDate = state.pathParameters['activityRecordDate']!;
-        final activityRecordDateParsed = DateTime.parse(activityRecordDate);
-        return DetailPage(activityRecordDateParsed);
+        final activity = state.extra as Activity;
+        return DetailPage(activity: activity);
       },
     ),
   ],

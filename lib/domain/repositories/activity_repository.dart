@@ -1,11 +1,9 @@
-import '../entitis/records.dart';
+import '../entitis/activities.dart';
 
-
-
-abstract class RecordRepository {
-  Future<List<Record>> getAllRecords();
-  Future<Record> getRecordById(String id);
-  Future<void> addRecord(Record record);
-  Future<void> updateRecord(Record record);
-  Future<void> deleteRecord(String id);
+abstract class ActivityRepository {
+  Future<List<Activity>> getAllActivities();
+  Future<Activity> getActivityById(String id);
+  Future<void> addActivity(Activity activity);
+  Future<void> updateActivity(Activity activity);
+  Future<void> deleteActivity(String id);
 }
