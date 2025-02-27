@@ -79,7 +79,8 @@ class ActivityDataSource extends DataTableSource {
       DataCell(Text(activity.distance.toString())),
       DataCell(Text(activity.caloriesBurned.toString())),
       DataCell(
-        TextButton(
+        //TextButton(
+        IconButton( 
           onPressed: () {
 // Navigate to detail page or perform any action
             /*
@@ -93,7 +94,9 @@ class ActivityDataSource extends DataTableSource {
 //contextgo('/detail');
             context.go('/detail', extra: activity);
           },
-          child: Text('Details'),
+          //child: Text('Details'),
+          icon: Icon(Icons.query_stats), // 使用 "資訊" 圖示
+          tooltip: '詳細資訊',
         ),
       ),
     ]);

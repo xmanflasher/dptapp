@@ -5,6 +5,7 @@ import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawe
 import '../../data/repositories/detail_repository.dart';
 import '../../domain/entitis/detail.dart';
 import '../../domain/entitis/activities.dart';
+import 'package:dptapp/core/extensions/duration_formatter.dart';
 
 class DetailPage extends StatefulWidget {
   //final DateTime activityActivityDate;
@@ -64,46 +65,26 @@ class _DetailPageState extends State<DetailPage>
               children: [
                 // 上半部分顯示圖表
                 Expanded(
-                  flex: 2, // 分配較大的空間給圖表
+                  flex: 1, // 分配較大的空間給圖表
                   child: Stack(
                     children: <Widget>[
                       AspectRatio(
                         aspectRatio: 1.70,
                         child: Padding(
+                          /*
                           padding: const EdgeInsets.only(
                             right: 18,
                             left: 12,
                             top: 24,
                             bottom: 12,
                           ),
+                          */
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: LineChart(
                             mainData(),
                           ),
                         ),
                       ),
-                      /*
-                //範例按鍵:切換圖表
-                SizedBox(
-                  width: 60,
-                  height: 34,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        showAvg = !showAvg;
-                      });
-                    },
-                    child: Text(
-                      'avg',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: showAvg
-                            ? Colors.white.withOpacity(0.5)
-                            : Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                */
                     ],
                   ),
                 ),
@@ -127,10 +108,20 @@ class _DetailPageState extends State<DetailPage>
                         child: TabBarView(
                           controller: _tabController,
                           children: [
-                            Center(child: Text('統計數據內容')),
-                            Center(child: Text('分趟數據內容')),
-                            Center(child: Text('心肺區間內容')),
-                          ],
+                            // 🔹 統計數據 Tab
+                      SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: _buildStatGrid(),
+                        ),
+                      ),
+
+                      // 分趟數據 Tab
+                      const Center(child: Text('分趟數據內容（待新增）')),
+
+                      // 心肺區間 Tab
+                      const Center(child: Text('心肺區間內容（待新增）')),
+                    ],
                         ),
                       ),
                     ],
@@ -143,7 +134,70 @@ class _DetailPageState extends State<DetailPage>
       ),
     );
   }
+  // 🔹 使用 GridView 讓數據分成兩半顯示
+  Widget _buildStatGrid() {
+    final List<Map<String, String>> stats = [
+      {"label": "距離", "value": "${widget.activity.distance} 公里"},
+      {"label": "卡路里", "value": "${widget.activity.caloriesBurned} kcal"},
+      {"label": "心率 (平均)", "value": "${widget.activity.averageHeartRate} bpm"},
+      {"label": "心率 (最大)", "value": "${widget.activity.maxHeartRate} bpm"},
+      //{"label": "計時", "value": "${widget.activity.time} 分鐘"},
+      {"label": "計時", "value": (widget.activity.time).toDisplayFormat()},
+      {"label": "總攀爬高度", "value": "${widget.activity.totalAscent} 公尺"},
+      //{"label": "最佳配速", "value": "${widget.activity.bestPace} 分鐘/公里"},
+      {"label": "最佳配速", "value": (widget.activity.bestPace).toDisplayFormat() +" /公里"},
+    ];
 
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(), // 禁止 GridView 滾動
+      shrinkWrap: true, // 讓 GridView 根據內容大小調整
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // 🔹 讓數據分成兩列
+        crossAxisSpacing: 16.0, // 列之間的間距
+        mainAxisSpacing: 8.0, // 行之間的間距
+        childAspectRatio: 3, // 控制方塊的寬高比例
+      ),
+      itemCount: stats.length,
+      itemBuilder: (context, index) {
+        return _buildStatItem(stats[index]["label"]!, stats[index]["value"]!);
+      },
+    );
+  }
+  Widget _buildStatItem(String label, String value) {
+    return SizedBox(
+      width: (MediaQuery.of(context).size.width - 48) / 2, // 兩個並排
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+            Text(value,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+          ],
+        ),
+      ),
+    );
+  }
+
+/*
+// 🔹 提取成共用的小組件
+  Widget _buildStatItem(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          Text(value,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+        ],
+      ),
+    );
+  }
+*/
   // 以下方法保持不變，主要用於圖表的設置
 /*
 //原範例
@@ -223,18 +277,17 @@ class _DetailPageState extends State<DetailPage>
         enabled: true,
         touchTooltipData: LineTouchTooltipData(
           //getTooltipColor: (spot) => AppColors.mainTooltipBgColor,
-        tooltipBorder: BorderSide(color: AppColors.tooltipBgColor),
-        getTooltipItems: (List<LineBarSpot> touchedSpots) {
-          return touchedSpots.map((spot) {
-            return LineTooltipItem(
-              '${spot.y.toStringAsFixed(2)} km/h',
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            );
-          }).toList();
-        },
-
+          tooltipBorder: BorderSide(color: AppColors.tooltipBgColor),
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            return touchedSpots.map((spot) {
+              return LineTooltipItem(
+                '${spot.y.toStringAsFixed(2)} km/h',
+                const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              );
+            }).toList();
+          },
         ),
-        
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(
