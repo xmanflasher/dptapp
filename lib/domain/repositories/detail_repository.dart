@@ -1,4 +1,4 @@
-import '../entitis/detail.dart';
+import '../entities/detail.dart';
 
 
 

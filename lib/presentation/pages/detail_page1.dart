@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/repositories/detail_repository.dart';
-import '../../domain/entitis/detail.dart';
+import '../../domain/entities/detail.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import 'package:dptapp/presentation/pages/pages.dart';
 

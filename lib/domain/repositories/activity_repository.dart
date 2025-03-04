@@ -1,4 +1,4 @@
-import '../entitis/activities.dart';
+import '../entities/activities.dart';
 
 abstract class ActivityRepository {
   Future<List<Activity>> getAllActivities();

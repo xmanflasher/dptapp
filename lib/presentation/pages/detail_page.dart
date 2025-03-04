@@ -3,8 +3,8 @@ import 'package:dptapp/presentation/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import '../../data/repositories/detail_repository.dart';
-import '../../domain/entitis/detail.dart';
-import '../../domain/entitis/activities.dart';
+import '../../domain/entities/detail.dart';
+import '../../domain/entities/activities.dart';
 import 'package:dptapp/core/extensions/duration_formatter.dart';
 
 class DetailPage extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/repositories/activity_repository.dart';
-import '../../domain/entitis/activities.dart';
+import '../../domain/entities/activities.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import 'package:dptapp/presentation/pages/pages.dart';
 import 'package:dptapp/core/extensions/date_formatter.dart';

@@ -1,7 +1,7 @@
 import 'package:dptapp/ini.dart';
 import 'package:go_router/go_router.dart';
 import '../pages/pages.dart';
-import '../../domain/entitis/activities.dart';
+import '../../domain/entities/activities.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/home',

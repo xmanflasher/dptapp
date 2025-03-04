@@ -1,5 +1,5 @@
 import 'package:dptapp/ini.dart'; // Import ini.dart
-import '../../domain/entitis/activities.dart';
+import '../../domain/entities/activities.dart';
 import '../../domain/repositories/activity_repository.dart';
 import 'package:dptapp/presentation/widgets/file_reader.dart';
 import 'package:hive/hive.dart';
