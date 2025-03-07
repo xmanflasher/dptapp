@@ -4,3 +4,4 @@ export 'syncrecording_page.dart';
 export 'settings_page.dart';
 export 'detail_page.dart';
 export '../../landing.dart';
+export 'test_page.dart';

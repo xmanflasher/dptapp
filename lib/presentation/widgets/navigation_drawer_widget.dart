@@ -92,6 +92,12 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               context.go('/syncrecording');
             },
           ),
+          ListTile(
+            title: const Text('Test'),
+            onTap: () {
+              context.go('/test');
+            },
+          ),
         ],
       ),
     );

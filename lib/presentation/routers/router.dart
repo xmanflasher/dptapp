@@ -29,5 +29,9 @@ final GoRouter router = GoRouter(
         return DetailPage(activity: activity);
       },
     ),
+    GoRoute(
+      path: '/test',
+      builder: (context, state) => TestPage(),
+    ),
   ],
 );
