@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../presentation/bloc/bloc.dart';
+import 'package:dptapp/domain/enums.dart';
 
 class RawDataManager extends StatelessWidget {
   final String? selectedFile;
-
   RawDataManager({this.selectedFile});
 
   @override
@@ -13,7 +13,13 @@ class RawDataManager extends StatelessWidget {
       create: (context) => RawDataBloc(),
       child: Column(
         children: [
-          _buildFileActionButtons(context),
+          Row(
+            children: [
+              _buildBoxSelectorButton(context),
+              SizedBox(width: 10),
+              _buildFileActionButtons(context),
+            ],
+          ),
           _buildSearchBar(context),
           _buildActionButtons(context),
           SizedBox(height: 20),
@@ -23,18 +29,46 @@ class RawDataManager extends StatelessWidget {
     );
   }
 
+  Widget _buildBoxSelectorButton(BuildContext context) {
+    return BlocBuilder<RawDataBloc, RawDataState>(
+      builder: (context, state) {
+        if (state.isActing.isNotEmpty) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return Row(
+          children: [
+            DropdownButton<DataBox>(
+              value: state.selectedBox,
+              items: DataBox.values.map((DataBox box) {
+                return DropdownMenuItem<DataBox>(
+                  value: box,
+                  child: Text(box.displayName),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  context.read<RawDataBloc>().add(DataBoxSelected(newValue));
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildFileActionButtons(BuildContext context) {
     return BlocBuilder<RawDataBloc, RawDataState>(
       builder: (context, state) {
-        //_importData
         if (state.isActing.isNotEmpty) {
           return Center(child: CircularProgressIndicator());
         }
         return Row(
           children: [
             ElevatedButton(
-              onPressed: () =>
-                  context.read<RawDataBloc>().add(ImportData(selectedFile!)),
+              onPressed: () => context
+                  .read<RawDataBloc>()
+                  .add(ImportData(selectedFile!, state.selectedBox)),
               child: Text("導入資料"),
             ),
           ],
@@ -54,55 +88,20 @@ class RawDataManager extends StatelessWidget {
               suffixIcon: IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () =>
-                    context.read<RawDataBloc>().add(SearchData('')),
+                    context.read<RawDataBloc>().add(SearchData('', state.selectedBox)),
               ),
             ),
             onChanged: (query) =>
-                context.read<RawDataBloc>().add(SearchData(query)),
+                context.read<RawDataBloc>().add(SearchData(query, state.selectedBox)),
           ),
         );
       },
     );
-    // return Padding(
-    //   padding: const EdgeInsets.all(8.0),
-    //   child: TextField(
-    //     decoration: InputDecoration(
-    //       labelText: '搜尋',
-    //       suffixIcon: IconButton(
-    //         icon: Icon(Icons.search),
-    //         onPressed: () => context.read<RawDataBloc>().add(SearchData('')),
-    //       ),
-    //     ),
-    //     onChanged: (query) =>
-    //         context.read<RawDataBloc>().add(SearchData(query)),
-    //   ),
-    // );
   }
 
-/*
-  Widget _buildActionButtons(BuildContext context) {
-    return Row(
-      children: [
-        ElevatedButton(
-          onPressed: () => context.read<RawDataBloc>().add(SelectAll()),
-          child: Text("選取全部"),
-        ),
-        ElevatedButton(
-          onPressed: () => context.read<RawDataBloc>().add(DeleteSelected()),
-          child: Text("刪除資料"),
-        ),
-        ElevatedButton(
-          onPressed: () => context.read<RawDataBloc>().add(ClearDatabase()),
-          child: Text("清除資料庫"),
-        ),
-      ],
-    );
-  }
-  */
   Widget _buildActionButtons(BuildContext context) {
     return BlocBuilder<RawDataBloc, RawDataState>(
       builder: (context, state) {
-        //_importData
         if (state.isActing.isNotEmpty) {
           return Center(child: CircularProgressIndicator());
         }
@@ -114,11 +113,11 @@ class RawDataManager extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () =>
-                  context.read<RawDataBloc>().add(DeleteSelected()),
+                  context.read<RawDataBloc>().add(DeleteSelected(state.selectedBox)),
               child: Text("刪除資料"),
             ),
             ElevatedButton(
-              onPressed: () => context.read<RawDataBloc>().add(ClearDatabase()),
+              onPressed: () => context.read<RawDataBloc>().add(ClearDatabase(state.selectedBox)),
               child: Text("清除資料庫"),
             ),
           ],

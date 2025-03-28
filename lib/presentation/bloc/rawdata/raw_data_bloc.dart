@@ -1,3 +1,4 @@
+import 'package:dptapp/domain/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
@@ -9,12 +10,17 @@ part 'raw_data_state.dart';
 
 class RawDataBloc extends Bloc<RawDataEvent, RawDataState> {
   RawDataBloc() : super(const RawDataState()) {
+    on<DataBoxSelected>(_onDataBoxSelected);
     on<ImportData>(_onImportData);
     on<SearchData>(_onSearchData);
     on<ToggleSelection>(_onToggleSelection);
     on<SelectAll>(_onSelectAll);
     on<DeleteSelected>(_onDeleteSelected);
     on<ClearDatabase>(_onClearDatabase);
+  }
+  Future<void> _onDataBoxSelected(
+      DataBoxSelected event, Emitter<RawDataState> emit) async {
+    emit(state.copyWith(selectedBox: event.selectedBox));
   }
 
   Future<void> _onImportData(
@@ -28,17 +34,17 @@ class RawDataBloc extends Bloc<RawDataEvent, RawDataState> {
       List<List<dynamic>> data = state.selectedFile.endsWith('.csv')
           ? await CsvReader().readCsv(event.selectedFile)
           : await TxtReader().readTxt(event.selectedFile);
-
-      // 將資料導入到 Hive
-      var box = await Hive.openBox('importedDataBox');
+      //根據選擇的 DataBox 將資料導入到 Hive
+      var box = await Hive.openBox(event.selectedBox.boxName);
       //await box.clear();
       await box.addAll(data);
 
       // 更新狀態
       List<dynamic> updatedResults = box.values.toList();
       emit(state.copyWith(
-          searchResults: updatedResults,
-          isActing: state.isActing..remove(RawDataAction.importing),));
+        searchResults: updatedResults,
+        isActing: state.isActing..remove(RawDataAction.importing),
+      ));
     } catch (e) {
       emit(state.copyWith(
           isActing: state.isActing..remove(RawDataAction.importing)));
@@ -50,8 +56,8 @@ class RawDataBloc extends Bloc<RawDataEvent, RawDataState> {
       SearchData event, Emitter<RawDataState> emit) async {
     emit(
         state.copyWith(isActing: {...state.isActing, RawDataAction.searching}));
-
-    var box = await Hive.openBox('importedDataBox');
+    //根據選擇的 DataBox 搜尋資料
+    var box = await Hive.openBox(state.selectedBox.boxName);
     List<dynamic> results = box.values
         .where((item) => item.toString().contains(event.query))
         .toList();
@@ -84,7 +90,7 @@ class RawDataBloc extends Bloc<RawDataEvent, RawDataState> {
 
     emit(state.copyWith(isActing: {...state.isActing, RawDataAction.deleting}));
 
-    var box = await Hive.openBox('importedDataBox');
+    var box = await Hive.openBox(event.selectedBox.boxName);
     for (var index in state.selectedItems.toList().reversed) {
       box.deleteAt(index);
     }
@@ -100,7 +106,7 @@ class RawDataBloc extends Bloc<RawDataEvent, RawDataState> {
       ClearDatabase event, Emitter<RawDataState> emit) async {
     emit(state.copyWith(isActing: {...state.isActing, RawDataAction.clearing}));
 
-    var box = await Hive.openBox('importedDataBox');
+    var box = await Hive.openBox(event.selectedBox.boxName);
     await box.clear();
 
     emit(state.copyWith(

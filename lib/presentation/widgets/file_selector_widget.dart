@@ -78,17 +78,17 @@ class _FileSelectorWidgetState extends State<FileSelectorWidget> {
             }
           },
         ),
-          Container(
-            height: 200,
-            padding: EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ListView(
-              children: _rawData.map((row) => Text(row.join(', '))).toList(),
-            ),
+        Container(
+          height: 200,
+          padding: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
           ),
+          child: ListView(
+            children: _rawData.map((row) => Text(row.join(', '))).toList(),
+          ),
+        ),
       ],
     );
   }
