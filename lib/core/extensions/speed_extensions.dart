@@ -1,9 +1,25 @@
-num? parseNullableSpeed(dynamic value) {
-  if (value == "" || value == null) {
-    return 0.0; // 當值為空或 null，返回 null
+// lib/extensions/speed_extensions.dart
+
+extension SpeedExtensions on double {
+  /// km/h -> 秒/500m
+  double toPaceSecondsPer500m() {
+    if (this <= 0 || isNaN || isInfinite) return double.nan;
+    return 1800.0 / this;
   }
-  if (value is num) {
-    return value; // 如果是數字，直接返回
+
+  /// 秒/500m -> km/h
+  double toSpeedKmH() {
+    if (this <= 0 || isNaN || isInfinite) return double.nan;
+    return 1800.0 / this;
   }
-  return num.tryParse(value.toString()); // 嘗試解析為數字
+
+  /// 格式化成 mm:ss.sss
+  String toPaceString() {
+    if (isNaN || isInfinite || this <= 0) return "-";
+    int minutes = this ~/ 60;
+    double seconds = this % 60;
+    String secondsStr = seconds.toStringAsFixed(3);
+    if (seconds < 10) secondsStr = '0$secondsStr';
+    return "$minutes:$secondsStr";
+  }
 }

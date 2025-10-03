@@ -1,6 +1,7 @@
-num? parseNullableNum(dynamic value) {
+// lib/core/parsers/speed_parser.dart
+num? parseNullableSpeed(dynamic value) {
   if (value == "" || value == null) {
-    return null; // 當值為空或 null，返回 null
+    return 0.0; // 當值為空或 null，返回 null
   }
   if (value is num) {
     return value; // 如果是數字，直接返回

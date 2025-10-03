@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:dptapp/core/extensions/date_extensions.dart'; // 確保這裡的路徑符合你的專案結構
+import 'package:dptapp/core/parsers/date_parser.dart'; // 確保這裡的路徑符合你的專案結構
 
 void main() {
   group('StringDateParsing - flexibleParseDate()', () {
@@ -24,7 +24,8 @@ void main() {
 
     test('應該成功解析 UTC 格式 yyyy-MM-dd\'T\'HH:mm:ss\'Z\'', () {
       String input = "2024-09-04T12:25:39.000Z";
-      DateTime expected = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parseUTC(input).toLocal();
+      DateTime expected =
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parseUTC(input).toLocal();
       DateTime result = input.flexibleParseDate();
 
       print('✅ 測試 UTC 格式: $input => $result');

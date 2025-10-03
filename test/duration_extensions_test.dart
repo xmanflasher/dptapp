@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dptapp/core/extensions/duration_extensions.dart'; // 確保這裡的路徑符合你的專案結構
+import 'package:dptapp/core/parsers/duration_formatter.dart'; // 確保這裡的路徑符合你的專案結構
 
 void main() {
   group('toDuration Tests', () {
     test('Parses hh:mm:ss format', () {
-      expect("25:08:00".toDuration(), Duration(hours: 25, minutes: 8, seconds: 0));
+      expect(
+          "25:08:00".toDuration(), Duration(hours: 25, minutes: 8, seconds: 0));
     });
 
     test('Parses mm:ss format', () {

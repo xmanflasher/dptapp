@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dptapp/core/extensions/date_formatter.dart'; // 確保這裡的路徑符合你的專案結構
+import 'package:dptapp/core/parsers/date_formatter.dart'; // 確保這裡的路徑符合你的專案結構
 import 'package:intl/intl.dart';
 
 void main() {
@@ -42,7 +42,8 @@ void main() {
 
     test('應該成功解析並格式化 "2024-09-04T12:25:39.000Z"', () {
       String input = "2024-09-04T12:25:39.000Z";
-      DateTime parsedDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parseUTC(input).toLocal();
+      DateTime parsedDate =
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parseUTC(input).toLocal();
       String result = parsedDate.toCustomFormat();
       String expected = "2024-09-04 20:25:39"; // 轉換為當地時間 (假設 +8 小時時區)
 

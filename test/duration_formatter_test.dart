@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dptapp/core/extensions/duration_formatter.dart';
+import 'package:dptapp/core/parsers/duration_display_formatter.dart';
 import 'package:intl/intl.dart';
 
 void main() {
@@ -10,7 +10,8 @@ void main() {
     });
 
     test('1:22:33.4 format', () {
-      Duration duration = Duration(hours: 1, minutes: 22, seconds: 33, microseconds: 400000);
+      Duration duration =
+          Duration(hours: 1, minutes: 22, seconds: 33, microseconds: 400000);
       expect(duration.toDisplayFormat(), '1:22:33.4');
     });
 
@@ -20,7 +21,8 @@ void main() {
     });
 
     test('2:03:07.099 format', () {
-      Duration duration = Duration(hours: 2, minutes: 3, seconds: 7, microseconds: 99000);
+      Duration duration =
+          Duration(hours: 2, minutes: 3, seconds: 7, microseconds: 99000);
       expect(duration.toDisplayFormat(), '2:03:07.099');
     });
 
@@ -45,7 +47,8 @@ void main() {
     });
 
     test('10:05:08 format', () {
-      Duration duration = Duration(hours: 10, minutes: 5, seconds: 8, microseconds: 0);
+      Duration duration =
+          Duration(hours: 10, minutes: 5, seconds: 8, microseconds: 0);
       expect(duration.toDisplayFormat(), '10:05:08');
     });
 
@@ -70,4 +73,3 @@ void main() {
     });
   });
 }
-
