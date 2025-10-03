@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/service/bluetooth_service.dart';
+import '../../../domain/service/bluetooth_device_service.dart';
 import 'package:equatable/equatable.dart';
 
 part 'bluetooth_event.dart';
