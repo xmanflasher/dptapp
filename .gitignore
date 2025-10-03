@@ -41,3 +41,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# VS Code user-specific settings
+.vscode/settings.json
+
+# Flutter auto-generated macOS plugin registrant
+macos/Flutter/GeneratedPluginRegistrant.swift
