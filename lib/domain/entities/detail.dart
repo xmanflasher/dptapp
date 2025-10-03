@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:dptapp/core/extensions/date_extensions.dart';
-import 'package:dptapp/core/extensions/meter_extensions.dart';
-import 'package:dptapp/core/extensions/speed_extensions.dart';
+import 'package:dptapp/core/parsers/date_parser.dart';
+import 'package:dptapp/core/parsers/meter_parser.dart';
+import 'package:dptapp/core/parsers/speed_parser.dart';
 
 class Detail extends Equatable {
   final String sport;
@@ -123,7 +123,8 @@ class Detail extends Equatable {
   factory Detail.fromCsvMap(List<dynamic> csv, DateTime activityRecordDate) {
     try {
       // 比對 activityRecordDate 與 csv 中的日期
-      DateTime recordDate = (csv[1] as String).flexibleParseDate() ?? DateTime.now();
+      DateTime recordDate =
+          (csv[1] as String).flexibleParseDate() ?? DateTime.now();
       //if (recordDate.toIso8601String().split('T').first != activityRecordDate) {
       if (recordDate != activityRecordDate) {
         throw FormatException("Date does not match: $activityRecordDate");

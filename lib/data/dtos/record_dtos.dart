@@ -1,3 +1,4 @@
+/*
 import 'package:dptapp/domain/entitis/records.dart';
 
 class RecordDTO{
@@ -64,3 +65,4 @@ static Record fromMap(Map<String, dynamic> map) {
     };
   }
 }
+*/

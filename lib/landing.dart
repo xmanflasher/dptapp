@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'presentation/bloc/bloc.dart';
-import 'presentation/routers/router.dart';
+import 'core/routers/router.dart';
 
 class DbtApp extends StatelessWidget {
   final String env;

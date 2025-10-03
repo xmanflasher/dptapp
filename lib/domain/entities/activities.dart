@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:dptapp/core/extensions/date_extensions.dart';
-import 'package:dptapp/core/extensions/duration_extensions.dart';
+import 'package:dptapp/core/parsers/date_parser.dart';
+import 'package:dptapp/core/parsers/duration_formatter.dart';
 
 class Activity extends Equatable {
   final String id;
@@ -59,50 +59,49 @@ class Activity extends Equatable {
 
   // Factory method to create a Activity from CSV data
   factory Activity.fromCsv(List<dynamic> csv) {
-  try {
-    return Activity(
-      //temp Activities row data id dosent exist
-      id: csv[0].toString(),
-      activityType: csv[1] as String,
-      //date: DateTime.parse(csv[2] as String),
-      //temp flexibleParseDate need review
-      date: ((csv[2] as String).flexibleParseDate()) ?? DateTime.now(),
-      //bool記得處理
-      favorite: csv[3] == 'true',
-      title: csv[4] as String,
-      distance: double.tryParse(csv[5].toString()) ?? 0.0, // 避免解析錯誤
-      caloriesBurned: int.tryParse(csv[6].toString()) ?? 0,
-      //time: Duration(minutes: int.tryParse(csv[7].toString()) ?? 0),
-      time: (csv[7] as String).toDuration(),
-      averageHeartRate: int.tryParse(csv[8].toString()) ?? 0,
-      maxHeartRate: int.tryParse(csv[9].toString()) ?? 0,
-      averageCadence: int.tryParse(csv[10].toString()) ?? 0,
-      maxCadence: int.tryParse(csv[11].toString()) ?? 0,
-      //averagePace: Duration(minutes: int.tryParse(csv[12].toString()) ?? 0),
-      averagePace: (csv[12] as String).toDuration(),
-      //bestPace: Duration(minutes: int.tryParse(csv[13].toString()) ?? 0),
-      bestPace: (csv[13] as String).toDuration(),
-      totalAscent: double.tryParse(csv[14].toString()) ?? 0.0,
-      totalDescent: double.tryParse(csv[15].toString()) ?? 0.0,
-      averageStrideLength: double.tryParse(csv[16].toString()) ?? 0.0,
-      trainingStressScore: double.tryParse(csv[17].toString()) ?? 0.0,
-      //bool記得處理
-      stressRelief: csv[18] == 'true',
-      //bestLapTime: Duration(minutes: int.tryParse(csv[19].toString()) ?? 0),
-      bestLapTime: (csv[19] as String).toDuration(),
-      laps: int.tryParse(csv[20].toString()) ?? 0,
-      //movingTime: Duration(minutes: int.tryParse(csv[21].toString()) ?? 0),
-      movingTime: (csv[21] as String).toDuration(),
-      //totalTime: Duration(minutes: int.tryParse(csv[22].toString()) ?? 0),
-      totalTime: (csv[22] as String).toDuration(),
-      minAltitude: double.tryParse(csv[23].toString()) ?? 0.0,
-      maxAltitude: double.tryParse(csv[24].toString()) ?? 0.0,
-    );
-  } catch (e) {
-    throw FormatException("Invalid CSV format: $csv, Error: $e");
+    try {
+      return Activity(
+        //temp Activities row data id dosent exist
+        id: csv[0].toString(),
+        activityType: csv[1] as String,
+        //date: DateTime.parse(csv[2] as String),
+        //temp flexibleParseDate need review
+        date: ((csv[2] as String).flexibleParseDate()) ?? DateTime.now(),
+        //bool記得處理
+        favorite: csv[3] == 'true',
+        title: csv[4] as String,
+        distance: double.tryParse(csv[5].toString()) ?? 0.0, // 避免解析錯誤
+        caloriesBurned: int.tryParse(csv[6].toString()) ?? 0,
+        //time: Duration(minutes: int.tryParse(csv[7].toString()) ?? 0),
+        time: (csv[7] as String).toDuration(),
+        averageHeartRate: int.tryParse(csv[8].toString()) ?? 0,
+        maxHeartRate: int.tryParse(csv[9].toString()) ?? 0,
+        averageCadence: int.tryParse(csv[10].toString()) ?? 0,
+        maxCadence: int.tryParse(csv[11].toString()) ?? 0,
+        //averagePace: Duration(minutes: int.tryParse(csv[12].toString()) ?? 0),
+        averagePace: (csv[12] as String).toDuration(),
+        //bestPace: Duration(minutes: int.tryParse(csv[13].toString()) ?? 0),
+        bestPace: (csv[13] as String).toDuration(),
+        totalAscent: double.tryParse(csv[14].toString()) ?? 0.0,
+        totalDescent: double.tryParse(csv[15].toString()) ?? 0.0,
+        averageStrideLength: double.tryParse(csv[16].toString()) ?? 0.0,
+        trainingStressScore: double.tryParse(csv[17].toString()) ?? 0.0,
+        //bool記得處理
+        stressRelief: csv[18] == 'true',
+        //bestLapTime: Duration(minutes: int.tryParse(csv[19].toString()) ?? 0),
+        bestLapTime: (csv[19] as String).toDuration(),
+        laps: int.tryParse(csv[20].toString()) ?? 0,
+        //movingTime: Duration(minutes: int.tryParse(csv[21].toString()) ?? 0),
+        movingTime: (csv[21] as String).toDuration(),
+        //totalTime: Duration(minutes: int.tryParse(csv[22].toString()) ?? 0),
+        totalTime: (csv[22] as String).toDuration(),
+        minAltitude: double.tryParse(csv[23].toString()) ?? 0.0,
+        maxAltitude: double.tryParse(csv[24].toString()) ?? 0.0,
+      );
+    } catch (e) {
+      throw FormatException("Invalid CSV format: $csv, Error: $e");
+    }
   }
-}
-
 
   // Factory method to create a Activity from Hive data
   factory Activity.fromHive(Map<String, dynamic> hive) {
