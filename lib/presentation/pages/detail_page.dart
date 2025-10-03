@@ -1,3 +1,4 @@
+//
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dptapp/presentation/resources/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,9 @@ import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawe
 import '../../data/repositories/detail_repository.dart';
 import '../../domain/entities/detail.dart';
 import '../../domain/entities/activities.dart';
-import 'package:dptapp/core/extensions/duration_formatter.dart';
+import '../widgets/DataDisplayCard.dart';
+import 'package:dptapp/core/parsers/duration_display_formatter.dart';
+import 'package:dptapp/core/extensions/speed_extensions.dart';
 
 class DetailPage extends StatefulWidget {
   //final DateTime activityActivityDate;
@@ -22,6 +25,17 @@ class _DetailPageState extends State<DetailPage>
     AppColors.contentColorCyan,
     AppColors.contentColorBlue,
   ];
+  //2025/9/22 add TextButton _showSpeed
+  bool _showSpeed = true; // true = km/h, false = 配速/500公尺
+  /// 把秒數轉成 mm:ss 格式
+  String _formatPace(double totalSeconds) {
+    if (totalSeconds.isInfinite || totalSeconds.isNaN || totalSeconds <= 0) {
+      return "-";
+    }
+    int minutes = totalSeconds ~/ 60;
+    double seconds = totalSeconds % 60;
+    return "$minutes:${seconds.toStringAsFixed(3).padLeft(6, '0')}";
+  }
 
   bool showAvg = false;
   late TabController _tabController;
@@ -64,30 +78,61 @@ class _DetailPageState extends State<DetailPage>
             return Column(
               children: [
                 // 上半部分顯示圖表
+                // Expanded(
+                //   flex: 1, // 分配較大的空間給圖表
+                //   child: Stack(
+                //     children: <Widget>[
+                //       AspectRatio(
+                //         aspectRatio: 1.70,
+                //         child: Padding(
+                //           /*
+                //           padding: const EdgeInsets.only(
+                //             right: 18,
+                //             left: 12,
+                //             top: 24,
+                //             bottom: 12,
+                //           ),
+                //           */
+                //           padding: const EdgeInsets.symmetric(horizontal: 16),
+                //           child: LineChart(
+                //             mainData(),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                //2025/9/22 add TextButton _showSpeed
                 Expanded(
-                  flex: 1, // 分配較大的空間給圖表
-                  child: Stack(
-                    children: <Widget>[
-                      AspectRatio(
-                        aspectRatio: 1.70,
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Expanded(
                         child: Padding(
-                          /*
-                          padding: const EdgeInsets.only(
-                            right: 18,
-                            left: 12,
-                            top: 24,
-                            bottom: 12,
-                          ),
-                          */
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: LineChart(
-                            mainData(),
+                          child: LineChart(mainData()),
+                        ),
+                      ),
+                      // 🔹 加上切換按鈕
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _showSpeed = !_showSpeed;
+                            });
+                          },
+                          child: Text(
+                            _showSpeed ? "切換為 配速/500m" : "切換為 Km/h",
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 // 下半部分顯示 TabBar 和 TabBarView
                 Expanded(
                   flex: 1, // 分配較小的空間給 TabBar 和內容
@@ -109,19 +154,19 @@ class _DetailPageState extends State<DetailPage>
                           controller: _tabController,
                           children: [
                             // 🔹 統計數據 Tab
-                      SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: _buildStatGrid(),
-                        ),
-                      ),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: _buildStatGrid(),
+                              ),
+                            ),
 
-                      // 分趟數據 Tab
-                      const Center(child: Text('分趟數據內容（待新增）')),
+                            // 分趟數據 Tab
+                            const Center(child: Text('分趟數據內容（待新增）')),
 
-                      // 心肺區間 Tab
-                      const Center(child: Text('心肺區間內容（待新增）')),
-                    ],
+                            // 心肺區間 Tab
+                            const Center(child: Text('心肺區間內容（待新增）')),
+                          ],
                         ),
                       ),
                     ],
@@ -134,6 +179,7 @@ class _DetailPageState extends State<DetailPage>
       ),
     );
   }
+
   // 🔹 使用 GridView 讓數據分成兩半顯示
   Widget _buildStatGrid() {
     final List<Map<String, String>> stats = [
@@ -145,7 +191,10 @@ class _DetailPageState extends State<DetailPage>
       {"label": "計時", "value": (widget.activity.time).toDisplayFormat()},
       {"label": "總攀爬高度", "value": "${widget.activity.totalAscent} 公尺"},
       //{"label": "最佳配速", "value": "${widget.activity.bestPace} 分鐘/公里"},
-      {"label": "最佳配速", "value": (widget.activity.bestPace).toDisplayFormat() +" /公里"},
+      {
+        "label": "最佳配速",
+        "value": (widget.activity.bestPace).toDisplayFormat() + " /公里"
+      },
     ];
 
     return GridView.builder(
@@ -153,81 +202,21 @@ class _DetailPageState extends State<DetailPage>
       shrinkWrap: true, // 讓 GridView 根據內容大小調整
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // 🔹 讓數據分成兩列
-        crossAxisSpacing: 16.0, // 列之間的間距
+        crossAxisSpacing: 10.0, // 列之間的間距
         mainAxisSpacing: 8.0, // 行之間的間距
-        childAspectRatio: 3, // 控制方塊的寬高比例
+        childAspectRatio: 2, // 控制方塊的寬高比例
       ),
       itemCount: stats.length,
       itemBuilder: (context, index) {
-        return _buildStatItem(stats[index]["label"]!, stats[index]["value"]!);
+        return DataDisplayCard(
+          label: stats[index]["label"]!,
+          value: stats[index]["value"]!,
+          icon: null, // 如果未來想加 icon，可以在這裡設定
+        );
       },
     );
   }
-  Widget _buildStatItem(String label, String value) {
-    return SizedBox(
-      width: (MediaQuery.of(context).size.width - 48) / 2, // 兩個並排
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-            Text(value,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-          ],
-        ),
-      ),
-    );
-  }
 
-/*
-// 🔹 提取成共用的小組件
-  Widget _buildStatItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-          Text(value,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-        ],
-      ),
-    );
-  }
-*/
-  // 以下方法保持不變，主要用於圖表的設置
-/*
-//原範例
-  Widget bottomTitleWidgets_O(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
-
-    return SideTitleWidget(
-      meta: meta,
-      child: text,
-    );
-  }
-  */
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -246,30 +235,6 @@ class _DetailPageState extends State<DetailPage>
     );
   }
 
-/*
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-*/
   LineChartData mainData() {
     return LineChartData(
       //TouchData
@@ -280,11 +245,25 @@ class _DetailPageState extends State<DetailPage>
           tooltipBorder: BorderSide(color: AppColors.tooltipBgColor),
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots.map((spot) {
-              return LineTooltipItem(
-                '${spot.y.toStringAsFixed(2)} km/h',
-                const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
-              );
+              //2025/9/22 add TextButton _showSpeed
+              if (_showSpeed) {
+                return LineTooltipItem(
+                  '${spot.y.toStringAsFixed(2)} km/h',
+                  const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                );
+                //2025/9/22 add TextButton _showSpeed
+              } else {
+                // 🔹 顯示 mm:ss.sss /500m
+                double paceSeconds = spot.y.toPaceSecondsPer500m();
+                return LineTooltipItem(
+                  '${paceSeconds.toPaceString()} /500m',
+                  const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }
             }).toList();
           },
         ),
@@ -328,6 +307,22 @@ class _DetailPageState extends State<DetailPage>
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 60,
+            //2025/9/22 add TextButton _showSpeed
+            getTitlesWidget: (value, meta) {
+              if (_showSpeed) {
+                // 顯示 km/h
+                return Text(
+                  value.toStringAsFixed(1),
+                  style: const TextStyle(fontSize: 12),
+                );
+              } else {
+                // 顯示 mm:ss.sss (配速/500m)
+                return Text(
+                  _formatPace(value),
+                  style: const TextStyle(fontSize: 12),
+                );
+              }
+            },
             maxIncluded: false,
             minIncluded: false,
           ),
@@ -373,56 +368,4 @@ class _DetailPageState extends State<DetailPage>
       ],
     );
   }
-
-/*
-//平均值範例
-  LineChartData avgData() {
-    return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-    );
-  }
-  */
 }

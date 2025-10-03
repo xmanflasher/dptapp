@@ -3,7 +3,7 @@ import '../../data/repositories/activity_repository.dart';
 import '../../domain/entities/activities.dart';
 import '../widgets/navigation_drawer_widget.dart'; // Import the NavigationDrawerWidget
 import 'package:dptapp/presentation/pages/pages.dart';
-import 'package:dptapp/core/extensions/date_formatter.dart';
+import 'package:dptapp/core/parsers/date_formatter.dart';
 import 'package:go_router/go_router.dart';
 
 class ActivitiesPage extends StatefulWidget {
@@ -55,8 +55,8 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
     );
   }
 }
+
 class ActivityDataSource extends DataTableSource {
-  
   final List<Activity> activities;
   final BuildContext context;
 
@@ -80,7 +80,7 @@ class ActivityDataSource extends DataTableSource {
       DataCell(Text(activity.caloriesBurned.toString())),
       DataCell(
         //TextButton(
-        IconButton( 
+        IconButton(
           onPressed: () {
 // Navigate to detail page or perform any action
             /*

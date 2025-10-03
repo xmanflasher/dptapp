@@ -1,5 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/bluetooth_chart_cubit.dart';
+import '../../../domain/service/bluetooth_service.dart';
+import '../widgets/timer_widget.dart';
+import '../widgets/navigation_drawer_widget.dart';
+
+class SyncrecordingPage extends StatelessWidget {
+  const SyncrecordingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => BluetoothChartCubit(BluetoothService()),
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Sync Recording")),
+        drawer: NavigationDrawerWidget(),
+        body: const Center(child: TimerWidget()),
+      ),
+    );
+  }
+}
+
+/*
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -44,3 +68,4 @@ class SyncrecordingPage extends StatelessWidget {
     );
   }
 }
+*/
