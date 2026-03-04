@@ -4,19 +4,44 @@ import '../bloc/bluetooth_chart_cubit.dart';
 import '../../../domain/service/bluetooth_service.dart';
 import '../widgets/timer_widget.dart';
 import '../widgets/navigation_drawer_widget.dart';
+import '../bloc/auth/auth_cubit.dart';
 
 class SyncrecordingPage extends StatelessWidget {
   const SyncrecordingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => BluetoothChartCubit(BluetoothService()),
-      child: Scaffold(
-        appBar: AppBar(title: const Text("Sync Recording")),
-        drawer: NavigationDrawerWidget(),
-        body: const Center(child: TimerWidget()),
-      ),
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, authState) {
+        final profile = authState.user;
+        final theme = Theme.of(context);
+
+        return BlocProvider(
+          create: (_) => BluetoothChartCubit(BluetoothService()),
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                "Sync Recording",
+                style: TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
+              ),
+              actions: [
+                if (profile != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundImage: profile.avatarUrl != null ? NetworkImage(profile.avatarUrl!) : null,
+                      backgroundColor: theme.primaryColor.withOpacity(0.2),
+                      child: profile.avatarUrl == null ? Icon(Icons.person, size: 20, color: theme.primaryColor) : null,
+                    ),
+                  ),
+              ],
+            ),
+            drawer: const NavigationDrawerWidget(),
+            body: const Center(child: TimerWidget()),
+          ),
+        );
+      },
     );
   }
 }

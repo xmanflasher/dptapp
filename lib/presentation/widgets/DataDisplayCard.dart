@@ -18,40 +18,50 @@ class DataDisplayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cardColor = color ?? theme.cardColor;
-    final labelStyle = theme.textTheme.bodySmall?.copyWith(
-      color: theme.textTheme.bodySmall?.color?.withOpacity(0.6),
-    );
-    final valueStyle = theme.textTheme.titleMedium?.copyWith(
-      fontWeight: FontWeight.bold,
-    );
-
-    return Card(
-      elevation: 2,
+    
+    return Container(
       margin: const EdgeInsets.all(4),
-      color: cardColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (icon != null)
-              Icon(icon, color: theme.iconTheme.color)
-            else
-              const SizedBox(width: 24),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label, style: labelStyle),
-                  const SizedBox(height: 4),
-                  Text(value, style: valueStyle, overflow: TextOverflow.ellipsis),
-                ],
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+              letterSpacing: 1.1,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 8),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
-            const SizedBox(width: 24),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
