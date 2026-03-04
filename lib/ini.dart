@@ -14,6 +14,10 @@ class AppIni {
   static Future<void> initializeHive() async {
     await Hive.initFlutter();
     await Hive.openBox('timerBox');
+    await Hive.openBox('trainingCycles');
+    await Hive.openBox('trainingMenus');
+    await Hive.openBox('trainingSchedules');
+    await Hive.openBox('userSettings');
   }
 
   static Future<String> configureDependencies() async {
