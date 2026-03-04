@@ -8,5 +8,5 @@ void main() async {
   // Configure dependencies and get the environment
   final currentEnv = await AppIni.configureDependencies();
 
-  runApp(DbtApp(env: currentEnv));
+  runApp(DbtApp());
 }

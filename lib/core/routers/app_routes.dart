@@ -1,11 +1,11 @@
-part of 'router.dart';
-
-abstract class AppRoutes {
-  static const home = '/home';
-  static const activities = '/Activities';
-  static const settings = '/settings';
-  static const syncrecording = '/syncrecording';
-  static const detail = '/detail';
-  static const test = '/test';
-  static const config = '/config';
+class AppRoutes {
+  static const String home = '/';
+  static const String activities = '/activities';
+  static const String detail = '/detail';
+  static const String test = '/test';
+  static const String training = '/training';
+  static const String settings = '/settings';
+  static const String syncrecording = '/syncrecording';
+  static const String login = '/login';
+  static const String community = '/community';
 }

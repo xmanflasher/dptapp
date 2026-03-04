@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import '../bloc/bluetooth/bluetooth_bloc.dart';
+import '../../core/routers/app_routes.dart';
+import '../bloc/auth/auth_cubit.dart';
+import '../resources/app_theme.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
+  const NavigationDrawerWidget({super.key});
+
   @override
   _NavigationDrawerWidgetState createState() => _NavigationDrawerWidgetState();
 }
@@ -17,85 +23,89 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Drawer(
+      backgroundColor: AppTheme.surface,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.deepPurple,
+              color: isDark ? AppTheme.surface : AppTheme.primaryBlue,
             ),
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  l10n.appTitle,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
             ),
           ),
-          ExpansionTile(
-            title: const Text('Settings'),
-            children: [
-              BlocBuilder<BluetoothBloc, BluetoothState>(
-                builder: (context, state) {
-                  bool isBluetoothOn = false;
-                  if (state is BluetoothOn) {
-                    isBluetoothOn = true;
-                  } else if (state is BluetoothOff) {
-                    isBluetoothOn = false;
-                  }
-
-                  return ListTile(
-                    title: Text('Bluetooth : ${isBluetoothOn ? "On" : "Off"}'),
-                    trailing: Switch(
-                      value: isBluetoothOn,
-                      onChanged: (value) {
-                        if (value) {
-                          context.read<BluetoothBloc>().add(TurnOnBluetooth());
-                        } else {
-                          context.read<BluetoothBloc>().add(TurnOffBluetooth());
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Devices : 0'),
-                onTap: () {
-                  context.go('/settings/devices');
-                },
-              ),
-              ListTile(
-                title: const Text('Setting Page'),
-                onTap: () {
-                  context.go('/settings');
-                },
-              ),
-            ],
-          ),
           ListTile(
-            title: const Text('Activities'),
+            leading: const Icon(Icons.home_outlined),
+            title: Text(l10n.appTitle), // Home
             onTap: () {
-              context.go('/activities');
+              context.go(AppRoutes.home);
+              Navigator.pop(context);
             },
           ),
           ListTile(
-            title: const Text('Detail'),
+            leading: const Icon(Icons.history_outlined),
+            title: Text(l10n.activities),
             onTap: () {
-              context.go('/detail/${DateTime.now()}');
+              context.go(AppRoutes.activities);
+              Navigator.pop(context);
             },
           ),
           ListTile(
-            title: const Text('Syncrecording'),
+            leading: const Icon(Icons.fitness_center_outlined),
+            title: Text(l10n.training),
             onTap: () {
-              context.go('/syncrecording');
+              context.go(AppRoutes.training);
+              Navigator.pop(context);
             },
           ),
           ListTile(
-            title: const Text('Test'),
+            leading: const Icon(Icons.group_outlined),
+            title: Text(l10n.community),
             onTap: () {
-              context.go('/test');
+              context.go(AppRoutes.community);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: Text(l10n.settings),
+            onTap: () {
+              context.go(AppRoutes.settings);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.sync),
+            title: Text(l10n.syncrecording),
+            onTap: () {
+              context.go(AppRoutes.syncrecording);
+              Navigator.pop(context);
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.redAccent),
+            title: const Text('Logout', style: TextStyle(color: Colors.redAccent)),
+            onTap: () {
+              context.read<AuthCubit>().logout();
             },
           ),
         ],
