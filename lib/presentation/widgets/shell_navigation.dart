@@ -73,9 +73,9 @@ class _ShellNavigationState extends State<ShellNavigation> {
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.history_outlined),
-                  activeIcon: Icon(Icons.history),
-                  label: 'Activities',
+                  icon: Icon(Icons.loop_outlined),
+                  activeIcon: Icon(Icons.loop),
+                  label: 'Cycle',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.fitness_center_outlined),

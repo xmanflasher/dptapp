@@ -1,25 +1,44 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dptapp/ini.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../presentation/pages/pages.dart';
 import '../../domain/entities/activities.dart';
 import '../../presentation/widgets/shell_navigation.dart';
 import 'app_routes.dart';
 import '../../presentation/bloc/auth/auth_cubit.dart';
 
+// Helper for GoRouter to listen to streams
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final GlobalKey<NavigatorState> _activitiesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'activities');
+final GlobalKey<NavigatorState> _cycleNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'cycle');
 final GlobalKey<NavigatorState> _trainingNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'training');
 final GlobalKey<NavigatorState> _communityNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'community');
 final GlobalKey<NavigatorState> _settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
 
-final GoRouter router = GoRouter(
+GoRouter createRouter(AuthCubit authCubit) => GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: AppRoutes.home,
+  refreshListenable: GoRouterRefreshStream(authCubit.stream),
   redirect: (context, state) {
-    final authState = context.read<AuthCubit>().state;
+    final authState = authCubit.state;
     final loggingIn = state.matchedLocation == AppRoutes.login;
 
     if (authState.status == AuthStatus.unknown) return null;
@@ -38,7 +57,13 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.login,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const LoginPage(),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const LoginPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
     ),
     StatefulShellRoute.indexedStack(
       parentNavigatorKey: _rootNavigatorKey,
@@ -56,21 +81,27 @@ final GoRouter router = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          navigatorKey: _activitiesNavigatorKey,
+          navigatorKey: _cycleNavigatorKey,
           routes: [
             GoRoute(
-              path: AppRoutes.activities,
-              builder: (context, state) => ActivitiesPage(),
+              path: AppRoutes.cycle,
+              builder: (context, state) => const CyclePage(),
               routes: [
                 GoRoute(
-                  path: 'detail',
-                  builder: (context, state) {
-                    if (state.extra is! Activity) {
-                      return ActivitiesPage();
-                    }
-                    final activity = state.extra as Activity;
-                    return DetailPage(activity: activity);
-                  },
+                  path: 'activities',
+                  builder: (context, state) => ActivitiesPage(),
+                  routes: [
+                    GoRoute(
+                      path: 'detail',
+                      builder: (context, state) {
+                        if (state.extra is! Activity) {
+                          return ActivitiesPage();
+                        }
+                        final activity = state.extra as Activity;
+                        return DetailPage(activity: activity);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

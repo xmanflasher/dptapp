@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'presentation/bloc/bloc.dart';
 import 'core/routers/router.dart';
-import 'presentation/bloc/theme/theme_cubit.dart';
-import 'presentation/bloc/settings/settings_cubit.dart';
-import 'data/repositories/settings_repository.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'data/repositories/settings_repository_impl.dart';
+import 'domain/repositories/settings_repository.dart';
 import 'presentation/resources/app_theme.dart';
 import 'domain/entities/user_config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'presentation/bloc/auth/auth_cubit.dart';
 import 'data/repositories/auth_repository_impl.dart';
 import 'domain/repositories/auth_repository.dart';
 
@@ -21,7 +21,7 @@ class DbtApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsRepo = HiveSettingsRepository();
+    final settingsRepo = SettingsRepositoryImpl(Hive.box('settings'));
 
     return MultiRepositoryProvider(
       providers: [
@@ -42,8 +42,21 @@ class DbtApp extends StatelessWidget {
   }
 }
 
-class AppView extends StatelessWidget {
+class AppView extends StatefulWidget {
   const AppView({super.key});
+
+  @override
+  State<AppView> createState() => _AppViewState();
+}
+
+class _AppViewState extends State<AppView> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = createRouter(context.read<AuthCubit>());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +81,7 @@ class AppView extends StatelessWidget {
                 Locale('en'),
                 Locale('zh'),
               ],
-              routerConfig: router,
+              routerConfig: _router,
             );
           },
         );
