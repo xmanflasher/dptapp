@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/entities/badge.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -6,6 +7,24 @@ import '../../domain/repositories/auth_repository.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final _controller = StreamController<UserProfile?>();
   UserProfile? _currentUser;
+  late Box _authBox;
+  
+  static const String _boxName = 'auth_persistence';
+  static const String _userKey = 'current_user';
+
+  AuthRepositoryImpl() {
+    _initPersistence();
+  }
+
+  Future<void> _initPersistence() async {
+    _authBox = await Hive.openBox(_boxName);
+    final storedData = _authBox.get(_userKey);
+    if (storedData != null && storedData is Map) {
+      // In a real app, we'd also check token validity here
+      _currentUser = UserProfile.fromMap(storedData);
+      _controller.add(_currentUser);
+    }
+  }
 
   @override
   Stream<UserProfile?> get user => _controller.stream;
@@ -21,6 +40,7 @@ class AuthRepositoryImpl implements AuthRepository {
       displayName: name,
       avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=$name',
       isMock: true,
+      subscriptionTier: 'premium', // For testing
       earnedBadges: [
         Badge(
           id: 'b1',
@@ -29,16 +49,9 @@ class AuthRepositoryImpl implements AuthRepository {
           iconAsset: 'bolt',
           earnedAt: DateTime.now().subtract(const Duration(days: 2)),
         ),
-        Badge(
-          id: 'b2',
-          name: 'Early Bird',
-          description: 'Trained before 7 AM',
-          iconAsset: 'wb_sunny',
-          earnedAt: DateTime.now().subtract(const Duration(days: 5)),
-        ),
       ],
     );
-    _controller.add(_currentUser);
+    await _saveUser();
   }
 
   @override
@@ -49,9 +62,10 @@ class AuthRepositoryImpl implements AuthRepository {
       displayName: 'Google Athlete',
       avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Google',
       isMock: false,
+      subscriptionTier: 'free',
       earnedBadges: [],
     );
-    _controller.add(_currentUser);
+    await _saveUser();
   }
 
   @override
@@ -62,9 +76,10 @@ class AuthRepositoryImpl implements AuthRepository {
       displayName: 'LINE Paddler',
       avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LINE',
       isMock: false,
+      subscriptionTier: 'premium',
       earnedBadges: [],
     );
-    _controller.add(_currentUser);
+    await _saveUser();
   }
 
   @override
@@ -75,14 +90,23 @@ class AuthRepositoryImpl implements AuthRepository {
       displayName: 'Facebook Racer',
       avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Facebook',
       isMock: false,
+      subscriptionTier: 'free',
       earnedBadges: [],
     );
-    _controller.add(_currentUser);
+    await _saveUser();
   }
 
   @override
   Future<void> logout() async {
     _currentUser = null;
+    await _authBox.delete(_userKey);
     _controller.add(null);
+  }
+
+  Future<void> _saveUser() async {
+    if (_currentUser != null) {
+      await _authBox.put(_userKey, _currentUser!.toMap());
+    }
+    _controller.add(_currentUser);
   }
 }
