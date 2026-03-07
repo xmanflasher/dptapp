@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
-import '../../../domain/entities/simulation_params.dart';
-import '../../../core/parsers/physics_engine.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:dptapp/features/training/domain/simulation_params.dart';
+import 'package:dptapp/core/parsers/physics_engine.dart';
 
 class TrainingState extends Equatable {
   final double speed; // m/s

@@ -1,8 +1,8 @@
-import 'package:hive/hive.dart';
-import '../../domain/entities/training_cycle.dart';
-import '../../domain/entities/training_menu.dart';
-import '../../domain/entities/training_schedule.dart';
-import '../../domain/repositories/training_repository.dart';
+﻿import 'package:hive/hive.dart';
+import 'package:dptapp/features/training/domain/training_cycle.dart';
+import 'package:dptapp/features/training/domain/training_menu.dart';
+import 'package:dptapp/features/training/domain/training_schedule.dart';
+import 'package:dptapp/features/training/domain/training_repository.dart';
 
 class HiveTrainingRepository implements TrainingRepository {
   final Box _cycleBox = Hive.box('trainingCycles');

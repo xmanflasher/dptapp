@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../domain/service/bluetooth_service.dart';
+import 'package:dptapp/core/services/bluetooth_service.dart';
 
 class BluetoothChartCubit extends Cubit<List<FlSpot>> {
   BluetoothChartCubit(this._dataSource) : super([]);

@@ -1,15 +1,17 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/training/training_cubit.dart';
-import '../bloc/training/training_state.dart';
-import '../bloc/settings/settings_cubit.dart';
-import '../widgets/live_hud.dart';
-import '../widgets/simulation_config_dialog.dart';
+import 'package:dptapp/features/training/presentation/bloc/training_cubit.dart';
+import 'package:dptapp/features/training/presentation/bloc/training_state.dart';
+import 'package:dptapp/features/settings/presentation/bloc/settings_cubit.dart';
+import 'package:dptapp/features/training/presentation/widgets/live_hud.dart';
+import 'package:dptapp/features/training/presentation/widgets/simulation_config_dialog.dart';
+import 'package:dptapp/shared/widgets/global_app_bar.dart';
+import 'package:dptapp/shared/widgets/shell_navigation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../bloc/auth/auth_cubit.dart';
-import '../resources/app_theme.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:dptapp/core/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/routers/app_routes.dart';
+import 'package:dptapp/core/routers/app_routes.dart';
 
 class TrainingPage extends StatelessWidget {
   const TrainingPage({super.key});
@@ -37,30 +39,17 @@ class _TrainingView extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppTheme.background,
-          appBar: AppBar(
+          appBar: GlobalAppBar(
+            title: l10n.training,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.go(AppRoutes.home),
-            ),
-            title: Text(
-              l10n.training,
-              style: const TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
+              icon: const Icon(Icons.menu),
+              onPressed: () => ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
             ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings_input_component),
                 onPressed: () => _showSimConfig(context),
               ),
-              if (profile != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundImage: profile.avatarUrl != null ? NetworkImage(profile.avatarUrl!) : null,
-                    backgroundColor: theme.primaryColor.withOpacity(0.2),
-                    child: profile.avatarUrl == null ? Icon(Icons.person, size: 20, color: theme.primaryColor) : null,
-                  ),
-                ),
             ],
           ),
           body: BlocBuilder<TrainingCubit, TrainingState>(
@@ -107,7 +96,7 @@ class _TrainingView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
-        color: Theme.of(context).secondaryHeaderColor.withOpacity(0.1),
+        color: Theme.of(context).secondaryHeaderColor.withValues(alpha: 0.1),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Row(

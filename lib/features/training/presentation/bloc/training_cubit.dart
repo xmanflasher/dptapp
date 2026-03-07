@@ -1,8 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'training_state.dart';
-import '../../../core/parsers/physics_engine.dart';
-import '../../../domain/entities/simulation_params.dart';
+import 'package:dptapp/features/training/presentation/bloc/training_state.dart';
+import 'package:dptapp/core/parsers/physics_engine.dart';
+import 'package:dptapp/features/training/domain/simulation_params.dart';
 
 class TrainingCubit extends Cubit<TrainingState> {
   Timer? _mockTimer;

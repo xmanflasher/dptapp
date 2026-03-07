@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/bluetooth_chart_cubit.dart';
-import '../../../domain/service/bluetooth_service.dart';
-import '../widgets/timer_widget.dart';
-import '../widgets/navigation_drawer_widget.dart';
-import '../bloc/auth/auth_cubit.dart';
+import 'package:dptapp/features/training/presentation/bloc/bluetooth_chart_cubit.dart';
+import 'package:dptapp/core/services/bluetooth_service.dart';
+import 'package:dptapp/features/training/presentation/widgets/timer_widget.dart';
+import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
 
 class SyncrecordingPage extends StatelessWidget {
   const SyncrecordingPage({super.key});
@@ -31,7 +31,7 @@ class SyncrecordingPage extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 18,
                       backgroundImage: profile.avatarUrl != null ? NetworkImage(profile.avatarUrl!) : null,
-                      backgroundColor: theme.primaryColor.withOpacity(0.2),
+                      backgroundColor: theme.primaryColor.withValues(alpha: 0.2),
                       child: profile.avatarUrl == null ? Icon(Icons.person, size: 20, color: theme.primaryColor) : null,
                     ),
                   ),
@@ -74,7 +74,7 @@ class SyncrecordingPage extends StatelessWidget {
             return const Dashboard();
           } else if (state is BluetoothOff) {
             return Container(
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha: 0.5),
               child: const Center(
                 child: Text(
                   'Bluetooth is Off',
