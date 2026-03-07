@@ -1,5 +1,5 @@
-import 'dart:math';
-import '../../domain/entities/simulation_params.dart';
+﻿import 'dart:math';
+import 'package:dptapp/features/training/domain/simulation_params.dart';
 
 class PerformanceMetrics {
   final double work; // Joules

@@ -1,7 +1,7 @@
-import '../parsers/date_parser.dart';
-import '../../domain/entities/lap.dart';
-import '../../domain/entities/activities.dart';
-import '../../domain/entities/detail.dart';
+﻿import '../parsers/date_parser.dart';
+import 'package:dptapp/features/activities/domain/lap.dart';
+import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/features/activities/domain/detail.dart';
 
 class TcxParser {
   static List<Lap> parseLaps(String tcxContent) {

@@ -1,5 +1,5 @@
-import '../../domain/entities/activities.dart';
-import '../../domain/entities/simulation_params.dart';
+﻿import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/features/training/domain/simulation_params.dart';
 
 class ExportService {
   static String generateActivityCsv(Activity activity, SimulationParams params, double work, double power, double impulse) {

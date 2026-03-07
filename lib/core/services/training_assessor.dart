@@ -1,5 +1,5 @@
-import '../entities/activities.dart';
-import '../entities/training_menu.dart';
+﻿import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/features/training/domain/training_menu.dart';
 
 class AssessmentResult {
   final double qualityScore; // 0.0 to 1.0

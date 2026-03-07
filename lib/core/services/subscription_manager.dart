@@ -1,5 +1,5 @@
-
-import '../entities/user_profile.dart';
+﻿
+import 'package:dptapp/features/auth/domain/user_profile.dart';
 
 class SubscriptionManager {
   bool isFeatureEnabled(UserProfile? user, String featureKey) {
