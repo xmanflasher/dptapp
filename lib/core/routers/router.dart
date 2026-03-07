@@ -1,12 +1,21 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dptapp/ini.dart';
 import 'package:go_router/go_router.dart';
-import '../../presentation/pages/pages.dart';
-import '../../domain/entities/activities.dart';
-import '../../presentation/widgets/shell_navigation.dart';
+import 'package:dptapp/features/auth/presentation/pages/login_page.dart';
+import 'package:dptapp/features/settings/presentation/pages/settings_page.dart';
+import 'package:dptapp/features/settings/presentation/pages/test_page.dart';
+import 'package:dptapp/features/home/presentation/pages/home_page.dart';
+import 'package:dptapp/features/activities/presentation/pages/activities_page.dart';
+import 'package:dptapp/features/training/presentation/pages/syncrecording_page.dart';
+import 'package:dptapp/features/activities/presentation/pages/detail_page.dart';
+import 'package:dptapp/features/training/presentation/pages/training_page.dart';
+import 'package:dptapp/features/cycle/presentation/pages/cycle_page.dart';
+import 'package:dptapp/features/community/presentation/pages/community_page.dart';
+import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/shared/widgets/shell_navigation.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
 import 'app_routes.dart';
-import '../../presentation/bloc/auth/auth_cubit.dart';
 
 // Helper for GoRouter to listen to streams
 class GoRouterRefreshStream extends ChangeNotifier {

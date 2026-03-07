@@ -45,7 +45,18 @@ graph TD
       SQLiteData[SQLite: Activity History / Laps]
       DartStatic[Dart Class: Domain Templates / Know-How]
   end
+  
+  subgraph "Architectural Boundaries (Post-Phase 6)"
+      Core[lib/core: Services, Enums, Theme, Parsers]
+      Shared[lib/shared: Global Widgets, Global Blocs]
+      Features[lib/features: Auth, Settings, Activities, Training, Home]
+  end
 ```
+
+## 1.1 Architectural Lessons from Feature-First Migration
+- **Absolute Imports**: Always use `package:dptapp/...`. Relative imports between features are forbidden to prevent cascading breakages.
+- **Encapsulation**: Features must only depend on `lib/core` or `lib/shared`. Cross-feature communication must happen through `domain/` interfaces or shared events.
+- **Enum Centralization**: System-wide enums (e.g., `RawDataAction`) reside in `lib/core/enums.dart` to ensure serialization consistency.
 
 ## 2. Real-time Training Feedback Flow (實時訓練回饋流程)
 This sequence shows how sensor data is combined with user-defined parameters for real-time coaching.

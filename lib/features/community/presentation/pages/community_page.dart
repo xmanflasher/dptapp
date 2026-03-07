@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
-import '../widgets/shell_navigation.dart';
-import '../../presentation/resources/app_theme.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:dptapp/shared/widgets/shell_navigation.dart';
+import 'package:dptapp/shared/widgets/global_app_bar.dart';
+import 'package:dptapp/core/theme/app_theme.dart';
 
 class CommunityPage extends StatelessWidget {
   const CommunityPage({super.key});
@@ -10,12 +11,12 @@ class CommunityPage extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlobalAppBar(
+        title: 'Community',
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
         ),
-        title: const Text('Community'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -66,14 +67,14 @@ class CommunityPage extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: theme.primaryColor.withOpacity(0.2)),
+        side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.2)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: color.withOpacity(0.1),
+              backgroundColor: color.withValues(alpha: 0.1),
               child: Icon(icon, color: color),
             ),
             const SizedBox(width: 16),
@@ -98,9 +99,9 @@ class CommunityPage extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isMe ? theme.primaryColor.withOpacity(0.1) : theme.cardColor,
+        color: isMe ? theme.primaryColor.withValues(alpha: 0.1) : theme.cardColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isMe ? theme.primaryColor : theme.dividerColor.withOpacity(0.1)),
+        border: Border.all(color: isMe ? theme.primaryColor : theme.dividerColor.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [

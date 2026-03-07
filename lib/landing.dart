@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'presentation/bloc/bloc.dart';
-import 'core/routers/router.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:dptapp/core/bloc/bluetooth/bluetooth_bloc.dart';
+import 'package:dptapp/shared/bloc/timer/timer_bloc.dart';
+import 'package:dptapp/features/settings/presentation/bloc/settings_cubit.dart';
+import 'package:dptapp/features/settings/presentation/bloc/theme_cubit.dart';
+import 'package:dptapp/core/routers/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'data/repositories/settings_repository_impl.dart';
-import 'domain/repositories/settings_repository.dart';
-import 'presentation/resources/app_theme.dart';
-import 'domain/entities/user_config.dart';
+import 'package:dptapp/features/settings/data/settings_repository_impl.dart';
+import 'package:dptapp/features/settings/domain/settings_repository.dart';
+import 'package:dptapp/core/theme/app_theme.dart';
+import 'package:dptapp/features/settings/domain/user_config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'data/repositories/auth_repository_impl.dart';
-import 'domain/repositories/auth_repository.dart';
+import 'package:dptapp/features/auth/data/auth_repository_impl.dart';
+import 'package:dptapp/features/auth/domain/auth_repository.dart';
 
 class DbtApp extends StatelessWidget {
   final AuthRepository authRepository = AuthRepositoryImpl();

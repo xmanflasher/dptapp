@@ -24,7 +24,8 @@
 | **Social (社交)** | Social Login (Google/LINE/FB) | Implemented (Phase 5) | Done | **[Implemented]** |
 | | Leaderboards & Challenges | Implemented (Phase 3) | Done | **[Implemented]** |
 | | Badges & Milestones | Partially Implemented | Mid | **[In Progress]** |
-| **Training (訓練)** | Cycle System (Macro/Micro) | Framework Ready | Mid | **[In Progress]** |
+| **Training (訓練)** | **Feature-First Architecture** | **[Implemented] (Phase 6)** | High | **[Done]** |
+| | Cycle System (Macro/Micro) | Framework Ready | Mid | **[In Progress]** |
 | | **Coach Reports (CSV)** | Implemented (Phase 4) | Done | **[Implemented]** |
 | **Equipment (設備)** | Real-time HUD (Cadence/Speed) | Implemented (Phase 1) | Done | **[Implemented]** |
 
@@ -54,8 +55,9 @@
 - **Real-time HUD (實時儀表板)**: **[Implemented]** High-frequency data refresh and physics calculation.
 - **Activity Playback (活動回放)**: **[Implemented]** Route visualization and TCX import.
 - **Training Management (訓練管理)**:
-  - **Cycles (Macro/Meso)**: **[In Progress]** Core of Phase 6. Supports Strength, Speed, etc.
-  - **Smart Scheduling (Micro)**: **[Not Implemented]** AI-driven daily workout generation.
+    - **Feature-First Migration**: **[Implemented]** Entire codebase moved to modular feature capsules.
+    - **Cycles (Macro/Meso)**: **[In Progress]** Supports Strength, Speed, etc.
+    - **Smart Scheduling (Micro)**: **[Not Implemented]** AI-driven daily workout generation.
 - **Social Interaction (社交互動)**:
   - **OAuth Login**: **[Implemented]** Integrated login flow.
   - **Leaderboards**: **[Implemented]** Global rankings.

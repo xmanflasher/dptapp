@@ -18,6 +18,8 @@ class AppIni {
     await Hive.openBox('trainingMenus');
     await Hive.openBox('trainingSchedules');
     await Hive.openBox('userSettings');
+    await Hive.openBox('auth_persistence');
+    await Hive.openBox('settings');
   }
 
   static Future<String> configureDependencies() async {
