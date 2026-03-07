@@ -1,7 +1,7 @@
-import 'package:fl_chart/fl_chart.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/bluetooth_chart_cubit.dart';
+import 'package:dptapp/features/training/presentation/bloc/bluetooth_chart_cubit.dart';
 
 class LineChartWidget extends StatelessWidget {
   final int displaySeconds; // 顯示的秒數，5~60，預設30
@@ -105,7 +105,7 @@ class LineChartWidget extends StatelessWidget {
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: Colors.blue.withOpacity(0.2),
+                      color: Colors.blue.withValues(alpha: 0.2),
                     ),
                   ),
                 ],

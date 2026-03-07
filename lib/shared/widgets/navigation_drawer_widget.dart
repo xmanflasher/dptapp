@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import '../bloc/bluetooth/bluetooth_bloc.dart';
-import '../../core/routers/app_routes.dart';
-import '../bloc/auth/auth_cubit.dart';
-import '../resources/app_theme.dart';
+import 'package:dptapp/core/bloc/bluetooth/bluetooth_bloc.dart';
+import 'package:dptapp/core/routers/app_routes.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:dptapp/core/theme/app_theme.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -51,38 +51,6 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                 const SizedBox(height: 8),
               ],
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.home_outlined),
-            title: Text(l10n.appTitle), // Home
-            onTap: () {
-              context.go(AppRoutes.home);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.history_outlined),
-            title: Text(l10n.activities),
-            onTap: () {
-              context.go(AppRoutes.activities);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.fitness_center_outlined),
-            title: Text(l10n.training),
-            onTap: () {
-              context.go(AppRoutes.training);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.group_outlined),
-            title: Text(l10n.community),
-            onTap: () {
-              context.go(AppRoutes.community);
-              Navigator.pop(context);
-            },
           ),
           ListTile(
             leading: const Icon(Icons.settings_outlined),

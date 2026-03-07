@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class DataDisplayCard extends StatelessWidget {
   final String label;
@@ -27,7 +27,7 @@ class DataDisplayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -41,7 +41,7 @@ class DataDisplayCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.5),
               letterSpacing: 1.1,
             ),
             textAlign: TextAlign.center,

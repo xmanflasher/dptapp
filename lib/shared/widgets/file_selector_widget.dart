@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
-import 'package:dptapp/presentation/widgets/file_reader.dart';
+import 'package:dptapp/core/services/file_reader.dart';
 
 class FileSelectorWidget extends StatefulWidget {
   final Function(String) onFileSelected;

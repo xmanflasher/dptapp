@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../presentation/bloc/bloc.dart';
-import 'package:dptapp/domain/enums.dart';
+import 'package:dptapp/features/activities/presentation/bloc/raw_data_bloc.dart';
+import 'package:dptapp/core/enums.dart';
 
 class RawDataManager extends StatelessWidget {
   final String? selectedFile;

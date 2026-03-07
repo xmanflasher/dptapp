@@ -1,16 +1,16 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:dptapp/data/repositories/activity_repository.dart';
-import 'package:dptapp/data/repositories/detail_repository.dart';
+import 'package:dptapp/features/activities/data/activity_repository_impl.dart';
+import 'package:dptapp/features/activities/data/detail_repository_impl.dart';
 /*
 import 'package:hive/hive.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dptapp/domain/repositories/activity_repository.dart';
-import 'package:dptapp/domain/repositories/detail_repository.dart';
-import 'package:dptapp/domain/entities/activities.dart';
-import 'package:dptapp/domain/entities/detail.dart';
+import 'package:dptapp/features/activities/domain/activity_repository.dart';
+import 'package:dptapp/features/activities/domain/detail_repository.dart';
+import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/features/activities/domain/detail.dart';
 */
-import 'package:dptapp/presentation/widgets/file_reader.dart';
+import 'package:dptapp/core/services/file_reader.dart';
 
 class TransmitterWidget extends StatefulWidget {
   @override

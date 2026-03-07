@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'navigation_drawer_widget.dart';
+import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
 
 class ShellNavigation extends StatefulWidget {
   final StatefulNavigationShell navigationShell;

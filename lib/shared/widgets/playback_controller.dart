@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/playback/playback_cubit.dart';
-import '../bloc/playback/playback_state.dart';
+import 'package:dptapp/features/activities/presentation/bloc/playback_cubit.dart';
+import 'package:dptapp/features/activities/presentation/bloc/playback_state.dart';
 
 class PlaybackController extends StatelessWidget {
   const PlaybackController({super.key});

@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class LineChartWidget extends StatefulWidget {
+class RecorderLineChartWidget extends StatefulWidget {
   @override
-  _LineChartWidgetState createState() => _LineChartWidgetState();
+  _RecorderLineChartWidgetState createState() => _RecorderLineChartWidgetState();
 }
 
-class _LineChartWidgetState extends State<LineChartWidget> {
+class _RecorderLineChartWidgetState extends State<RecorderLineChartWidget> {
   List<FlSpot> dataPoints = [];
   Timer? _timer;
   int _timeCounter = 0;

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' hide Badge;
-import '../../domain/entities/badge.dart';
+﻿import 'package:flutter/material.dart' hide Badge;
+import 'package:dptapp/features/auth/domain/badge.dart';
 
 class BadgeCard extends StatelessWidget {
   final Badge badge;
@@ -13,9 +13,9 @@ class BadgeCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.amber.withOpacity(0.1),
+        color: Colors.amber.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.amber.withOpacity(0.3)),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
