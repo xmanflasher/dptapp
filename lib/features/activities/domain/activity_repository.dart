@@ -1,4 +1,4 @@
-import '../entities/activities.dart';
+﻿import 'package:dptapp/features/activities/domain/activities.dart';
 
 abstract class ActivityRepository {
   Future<List<Activity>> getAllActivities();

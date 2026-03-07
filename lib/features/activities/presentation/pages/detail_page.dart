@@ -1,25 +1,26 @@
-import 'package:fl_chart/fl_chart.dart';
-import 'package:dptapp/presentation/resources/app_colors.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
+import 'package:dptapp/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/navigation_drawer_widget.dart';
-import '../../data/repositories/detail_repository.dart';
-import '../../domain/entities/detail.dart';
-import '../../domain/entities/activities.dart';
-import '../widgets/DataDisplayCard.dart';
+import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
+import 'package:dptapp/features/activities/domain/detail_repository.dart';
+import 'package:dptapp/features/activities/data/detail_repository_impl.dart';
+import 'package:dptapp/features/activities/domain/detail.dart';
+import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/shared/widgets/data_display_card.dart';
 import 'package:dptapp/core/parsers/duration_display_formatter.dart';
 import 'package:dptapp/core/extensions/speed_extensions.dart';
 
-import '../../core/parsers/physics_engine.dart';
-import '../../domain/entities/simulation_params.dart';
+import 'package:dptapp/core/parsers/physics_engine.dart';
+import 'package:dptapp/features/training/domain/simulation_params.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import '../../core/services/export_service.dart';
+import 'package:dptapp/core/services/export_service.dart';
 
 class DetailPage extends StatefulWidget {
   final Activity activity;
-  const DetailPage({Key? key, required this.activity}) : super(key: key);
+  const DetailPage({super.key, required this.activity});
 
   @override
   State<DetailPage> createState() => _DetailPageState();

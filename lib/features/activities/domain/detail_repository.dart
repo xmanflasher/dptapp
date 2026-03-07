@@ -1,4 +1,4 @@
-import '../entities/detail.dart';
+﻿import 'package:dptapp/features/activities/domain/detail.dart';
 
 
 

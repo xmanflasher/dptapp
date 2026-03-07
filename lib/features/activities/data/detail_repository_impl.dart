@@ -1,11 +1,11 @@
-import 'package:dptapp/ini.dart';
+﻿import 'package:dptapp/ini.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import '../../domain/entities/detail.dart';
-import '../../domain/repositories/detail_repository.dart';
-import 'package:dptapp/presentation/widgets/file_reader.dart';
+import 'package:dptapp/features/activities/domain/detail.dart';
+import 'package:dptapp/features/activities/domain/detail_repository.dart';
+import 'package:dptapp/core/services/file_reader.dart';
+import 'package:dptapp/core/parsers/tcx_parser.dart';
+import 'package:dptapp/core/parsers/date_parser.dart';
 import 'package:hive/hive.dart';
-import '../../core/parsers/tcx_parser.dart';
-import '../../core/parsers/date_parser.dart';
 
 class DetailRepositoryImpl implements DetailRepository {
   @override

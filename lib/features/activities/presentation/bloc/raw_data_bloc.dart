@@ -1,9 +1,9 @@
-import 'package:dptapp/domain/enums.dart';
+﻿import 'package:dptapp/core/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:dptapp/presentation/widgets/file_reader.dart';
+import 'package:dptapp/core/services/file_reader.dart';
 
 part 'raw_data_event.dart';
 part 'raw_data_state.dart';

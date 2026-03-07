@@ -1,7 +1,7 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import 'package:dptapp/core/parsers/date_parser.dart';
 import 'package:dptapp/core/parsers/duration_formatter.dart';
-import 'simulation_params.dart';
+import 'package:dptapp/features/training/domain/simulation_params.dart';
 import 'lap.dart';
 
 class Activity extends Equatable {

@@ -1,21 +1,25 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/repositories/activity_repository.dart';
-import '../../domain/entities/activities.dart';
-import '../widgets/navigation_drawer_widget.dart';
-import 'package:dptapp/presentation/pages/pages.dart';
+import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/features/activities/domain/activity_repository.dart';
+import 'package:dptapp/features/activities/data/activity_repository_impl.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:dptapp/core/parsers/date_formatter.dart';
+import 'package:dptapp/core/theme/app_theme.dart';
+import 'package:dptapp/core/routers/app_routes.dart';
+import 'package:dptapp/shared/widgets/global_app_bar.dart';
+import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
+import 'package:dptapp/shared/widgets/shell_navigation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dptapp/presentation/bloc/auth/auth_cubit.dart';
-import 'package:dptapp/presentation/resources/app_theme.dart';
-import '../widgets/shell_navigation.dart';
 
 class ActivitiesPage extends StatefulWidget {
+  const ActivitiesPage({super.key});
+
   @override
-  _ActivitiesPageState createState() => _ActivitiesPageState();
+  State<ActivitiesPage> createState() => ActivitiesPageState();
 }
 
-class _ActivitiesPageState extends State<ActivitiesPage> {
+class ActivitiesPageState extends State<ActivitiesPage> {
   late Future<List<Activity>> _activitiesFuture;
 
   @override
@@ -32,27 +36,12 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
         final theme = Theme.of(context);
 
         return Scaffold(
-          appBar: AppBar(
+          appBar: GlobalAppBar(
+            title: 'Activities',
             leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () => ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.go(AppRoutes.cycle),
             ),
-            title: const Text(
-              'Activities',
-              style: TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
-            ),
-            actions: [
-              if (profile != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundImage: profile.avatarUrl != null ? NetworkImage(profile.avatarUrl!) : null,
-                    backgroundColor: theme.primaryColor.withOpacity(0.2),
-                    child: profile.avatarUrl == null ? Icon(Icons.person, size: 20, color: theme.primaryColor) : null,
-                  ),
-                ),
-            ],
           ),
           body: FutureBuilder<List<Activity>>(
               future: _activitiesFuture,
@@ -72,7 +61,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: theme.primaryColor.withOpacity(0.2), width: 1),
+                        side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.2), width: 1),
                         ),
                       ),
                     ),
@@ -118,11 +107,11 @@ class ActivityDataSource extends DataTableSource {
       return null;
     }
     final activity = activities[index];
-    var ActivityActivityDate = (activity.date).toCustomFormat();
+    final activityDate = (activity.date).toCustomFormat();
     return DataRow(cells: [
       DataCell(Text(activity.title)),
       DataCell(Text(activity.activityType)),
-      DataCell(Text(ActivityActivityDate.toString())),
+      DataCell(Text(activityDate.toString())),
       DataCell(Text(activity.distance.toString())),
       DataCell(Text(activity.caloriesBurned.toString())),
       DataCell(
@@ -130,7 +119,7 @@ class ActivityDataSource extends DataTableSource {
           onPressed: () {
             context.go('/detail', extra: activity);
           },
-          icon: Icon(Icons.query_stats),
+          icon: const Icon(Icons.query_stats),
           tooltip: '詳細資訊',
         ),
       ),
