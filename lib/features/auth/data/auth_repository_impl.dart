@@ -1,8 +1,8 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../domain/entities/user_profile.dart';
-import '../../domain/entities/badge.dart';
-import '../../domain/repositories/auth_repository.dart';
+import 'package:dptapp/features/auth/domain/user_profile.dart';
+import 'package:dptapp/features/auth/domain/badge.dart';
+import 'package:dptapp/features/auth/domain/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final _controller = StreamController<UserProfile?>();

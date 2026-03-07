@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../domain/entities/user_profile.dart';
-import '../../../domain/repositories/auth_repository.dart';
+import 'package:dptapp/features/auth/domain/user_profile.dart';
+import 'package:dptapp/features/auth/domain/auth_repository.dart';
 
 enum AuthStatus { unknown, authenticated, unauthenticated, authenticating }
 

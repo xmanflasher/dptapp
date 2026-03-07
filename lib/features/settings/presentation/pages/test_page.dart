@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:dptapp/presentation/widgets/raw_data_manager_widget.dart';
-import 'package:dptapp/presentation/widgets/file_selector_widget.dart';
-import '../widgets/navigation_drawer_widget.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:dptapp/shared/widgets/raw_data_manager_widget.dart';
+import 'package:dptapp/shared/widgets/file_selector_widget.dart';
+import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
 
 class TestPage extends StatefulWidget {
   @override

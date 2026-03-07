@@ -1,4 +1,4 @@
-import '../entities/user_profile.dart';
+﻿import 'package:dptapp/features/auth/domain/user_profile.dart';
 
 abstract class AuthRepository {
   Stream<UserProfile?> get user;

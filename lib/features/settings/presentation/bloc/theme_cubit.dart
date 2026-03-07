@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/repositories/settings_repository.dart';
+import 'package:dptapp/features/settings/domain/settings_repository.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
   final SettingsRepository _settingsRepository;

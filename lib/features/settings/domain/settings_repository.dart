@@ -1,4 +1,4 @@
-import '../entities/user_config.dart';
+﻿import 'package:dptapp/features/settings/domain/user_config.dart';
 
 abstract class SettingsRepository {
   Future<UserConfig> getSettings();

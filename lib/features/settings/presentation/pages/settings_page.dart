@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/settings/settings_cubit.dart';
-import '../bloc/theme/theme_cubit.dart';
-import '../../domain/entities/user_config.dart';
-import '../widgets/navigation_drawer_widget.dart';
+import 'package:dptapp/features/settings/presentation/bloc/settings_cubit.dart';
+import 'package:dptapp/features/settings/presentation/bloc/theme_cubit.dart';
+import 'package:dptapp/features/settings/domain/user_config.dart';
+import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../bloc/auth/auth_cubit.dart';
-import '../resources/app_theme.dart';
-import '../widgets/shell_navigation.dart';
+import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:dptapp/core/theme/app_theme.dart';
+import 'package:dptapp/shared/widgets/shell_navigation.dart';
+import 'package:dptapp/shared/widgets/global_app_bar.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -22,27 +23,12 @@ class SettingsPage extends StatelessWidget {
         final theme = Theme.of(context);
 
         return Scaffold(
-          appBar: AppBar(
+          appBar: GlobalAppBar(
+            title: l10n.settings,
             leading: IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () => ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
             ),
-            title: Text(
-              l10n.settings,
-              style: const TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
-            ),
-            actions: [
-              if (profile != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundImage: profile.avatarUrl != null ? NetworkImage(profile.avatarUrl!) : null,
-                    backgroundColor: theme.primaryColor.withOpacity(0.2),
-                    child: profile.avatarUrl == null ? Icon(Icons.person, size: 20, color: theme.primaryColor) : null,
-                  ),
-                ),
-            ],
           ),
           body: BlocBuilder<SettingsCubit, UserConfig>(
             builder: (context, settings) {
@@ -162,22 +148,4 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-extension on UserConfig {
-  UserConfig copyWith({
-    String? language,
-    String? themeMode,
-    bool? useMetric,
-    double? userWeight,
-    int? userAge,
-  }) {
-    return UserConfig(
-      language: language ?? this.language,
-      themeMode: themeMode ?? this.themeMode,
-      useMetric: useMetric ?? this.useMetric,
-      userWeight: userWeight ?? this.userWeight,
-      userAge: userAge ?? this.userAge,
-      hrZones: hrZones,
-      powerZones: powerZones,
-    );
-  }
-}
+

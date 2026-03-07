@@ -1,6 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/entities/user_config.dart';
-import '../../../domain/repositories/settings_repository.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dptapp/features/settings/domain/user_config.dart';
+import 'package:dptapp/features/settings/domain/settings_repository.dart';
 
 class SettingsCubit extends Cubit<UserConfig> {
   final SettingsRepository _settingsRepository;

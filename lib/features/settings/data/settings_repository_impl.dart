@@ -1,6 +1,6 @@
-import 'package:hive_flutter/hive_flutter.dart';
-import '../../domain/entities/user_config.dart';
-import '../../domain/repositories/settings_repository.dart';
+﻿import 'package:hive_flutter/hive_flutter.dart';
+import 'package:dptapp/features/settings/domain/user_config.dart';
+import 'package:dptapp/features/settings/domain/settings_repository.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
   final Box _box;
