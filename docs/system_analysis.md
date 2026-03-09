@@ -25,8 +25,9 @@
 | | Leaderboards & Challenges | Implemented (Phase 3) | Done | **[Implemented]** |
 | | Badges & Milestones | Partially Implemented | Mid | **[In Progress]** |
 | **Training (訓練)** | **Feature-First Architecture** | **[Implemented] (Phase 6)** | High | **[Done]** |
-| | Cycle System (Macro/Micro) | Framework Ready | Mid | **[In Progress]** |
+| | Sub-Phase Tagging & Post-Edit (次階段標記與後製) | Framework Ready | Mid | **[Not Implemented]** |
 | | **Coach Reports (CSV)** | Implemented (Phase 4) | Done | **[Implemented]** |
+| | Telemetry Video Overlay (數據疊加錄影) | None (無) | High | **[To-be-Developed]** |
 | **Equipment (設備)** | Real-time HUD (Cadence/Speed) | Implemented (Phase 1) | Done | **[Implemented]** |
 
 ---
@@ -36,16 +37,16 @@
 ### 4.1 Header & Navigation (頂部導覽)
 - **Hamburger Menu (漢堡選單)**: **[Implemented]** Opens left `Drawer` for global settings and **Logout**.
   - **[已落實]** 開啟左側 `Drawer`。目前的 `Drawer` 承載全域導覽與**登出**按鈕。
-- **Notification Bell (通知鈴鐺)**: **[Not Implemented]** Placeholder for future "Notification Center".
-  - **[未落實]** 預留位，未來將連結「通知中心」。
-- **User Avatar (使用者頭像)**: **[Implemented]** Displays profile picture. Click to Profile (TBD).
-  - **[已落實]** 顯示頭像。點擊預計導向個人詳情（未落實）。
+- **Notification Bell (通知鈴鐺)**: **[Implemented]** Added to Header for future notification center.
+  - **[已落實]** 位於全局 Header 供未來通知整合。
+- **User Avatar (使用者頭像)**: **[Implemented]** Displays profile picture. Click to open Profile, Training, and Simulation settings.
+  - **[已落實]** 顯示頭像。點擊可進入完整的系統與模擬設定表單。
 
 ### 4.2 Home Dashboard (首頁儀表板)
 - **Daily Stats (每日統計)**: **[Implemented]** Distance, Power, Calories, etc.
   - **[已落實]** 顯示距離、功率、卡路里等。
-- **Custom Widget Sorting (自定義排序)**: **[Not Implemented]** Allow users to reorder or hide cards.
-  - **[未落實]** 允許使用者自由移動或隱藏統計卡片。
+- **Custom Widget Sorting (自定義排序)**: **[Implemented]** Allow users to reorder or hide cards via DashboardSettingsPage.
+  - **[已落實]** 允許使用者自由移動或隱藏統計卡片。
 - **Training Progress Card (訓練進度卡)**: **[Implemented]** Summary of current cycle progress.
   - **[已落實]** 顯示當前週期的進度摘要。
 
@@ -54,10 +55,12 @@
 ## 5. Operational Modules (營運模組分析)
 - **Real-time HUD (實時儀表板)**: **[Implemented]** High-frequency data refresh and physics calculation.
 - **Activity Playback (活動回放)**: **[Implemented]** Route visualization and TCX import.
+    - **Telemetry Video Overlay (數據錄影)**: **[Not Implemented]** FFmpeg/Video rendering with dynamic data (Speedometer, Route) on top of recorded footage.
 - **Training Management (訓練管理)**:
     - **Feature-First Migration**: **[Implemented]** Entire codebase moved to modular feature capsules.
     - **Cycles (Macro/Meso)**: **[In Progress]** Supports Strength, Speed, etc.
     - **Smart Scheduling (Micro)**: **[Not Implemented]** AI-driven daily workout generation.
+    - **Post-Workout Editing**: **[Not Implemented]** Modify or auto-detect Laps and Phase Markers dynamically via UI graph editing.
 - **Social Interaction (社交互動)**:
   - **OAuth Login**: **[Implemented]** Integrated login flow.
   - **Leaderboards**: **[Implemented]** Global rankings.

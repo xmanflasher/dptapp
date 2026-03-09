@@ -17,6 +17,7 @@ You can copy and paste these commands into your terminal for daily development.
 | :--- | :--- |
 | `flutter analyze` | Analyze the project for errors and warnings |
 | `flutter test` | Run unit and widget tests |
+| `flutter test test/router_transition_test.dart` | Run router transition tests |
 | `dart format .` | Format all files in the current directory |
 | `flutter pub run build_runner build` | (If using) Run one-time code generation |
 | `flutter pub run build_runner watch` | (If using) Keep watch for file changes to generate code |

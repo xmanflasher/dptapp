@@ -59,18 +59,27 @@
 
 ## 3. 實際執行與 UI 互動 (Training Execution)
 
-在 `Training` 畫面實際執行該課表時：
+在 `Training` 畫面實際執行該課表時，將面臨三種主要的訓練情境：
 
-- **時間軸與提示 (Timeline & Cues)**：
-  - 啟動課表後，主時間軸開始記錄。
-  - UI 畫面上方會顯示類似「音樂 APP 歌詞」的滾動式提示 (Scrolling Workout Cues)，讓運動員提前預知下一個 Lap 的強度與剩餘時間。
-- **階段提醒 (Alerts)**：
-  - 在每個階段轉換（例如：高強度轉為組休）前 3-5 秒，系統發出倒數音效或震動，以彌補水上運動難以頻繁看手錶/手機的痛點。
-- **計圈與停錶 (Laps & Stops)**：
-  - 支援 **自動給予時間戳記** (根據預設計畫時間自動切換 Lap)。
-  - 支援 **手動點擊** 計圈或暫停 (適用於水流變化或突發狀況導致的時間延遲)。
-- **賽後調整 (Post-Workout Adjustment)**：
-  - 實際的 Laps 數據（如果手動切換時間有誤差），可以在訓練結束後，進入 `Activities` > `Activity Detail` 頁面中手動微調切割點。
+### A. 情境分析與戳記設計 (Activity Scenarios & Tagging)
+1. **單一連續訓練 (Start > 單趟 > End)**
+   - 最單純的情境。使用者只需在開始時按下 Start，結束時按下 End。整段視為單一連續的 Lap。
+2. **間歇訓練 (Start > Lap/組休 > ... > End)**
+   - **Lap 按鈕 vs Pause 按鈕**：
+     - **組間休息 (Rest)**：應點擊 `Lap`（或由系統自動切換）。此時**仍在記錄數據與時間**，只是強度目標為 0（恢復期），心率與微小位移仍需作為恢復指標被記錄。
+     - **暫停 (Pause)**：僅在「遇到紅燈、器材故障、喝水中斷」等非計畫性的中斷時點擊。Pause 狀態下**完全不記錄時間與活動軌跡**。
+3. **複合階段的單趟訓練 (Start > 起步20槳 > 途中60槳 > 衝刺30槳 > End)**
+   - 這在物理意義上是「連續不中斷」的單一趟次，但存在不同的戰術階段 (Phases)。
+   - **解決方案：子階段標籤 (Sub-Phase Tags / Markers)**。除了傳統的 `Lap` 按鈕外，UI 應提供一個 `Mark / Tag` 按鈕（或智慧穿戴裝置的輕拍手勢）。點擊 `Mark` 不會切斷當下的 Lap 統計計算，而是會在當前時間軸上打下一個「事件書籤 (Event Marker)」。事後分析時，便能以這些 Marker 將單趟切分為起步、途中、衝刺來獨立分析槳頻或配速。
+
+### B. 互動與賽後編輯 (Interaction & Post-Workout Editing)
+- **訓練當下**：
+  - 支援 **自動切換 (Auto-Lap)**：根據課表設定的時間或距離自動進段。
+  - 支援 **手動計圈 (Manual Lap)** 與 **手動標記 (Manual Mark)**：適用於水流變化或戰術改變。
+- **賽後調整與智慧編輯 (Post-Workout Adjustment)**：
+  - 訓練結束後，進入 `Activities` > `Activity Detail`。
+  - **手動編輯**：使用者能在圖表的時間軸上，手動新增、刪除或拖曳移動 `Lap` 與 `Marker` 的切割點，修正水上匆忙按錶的誤差。
+  - **自動分析 (Auto-Detection)**：系統可運用演算法（例如偵測槳頻陡升/陡降），自動為使用者標註出「起步加速」與「衝刺」的可能時間點，詢問是否套用為 Marker。
 
 ---
 
@@ -83,19 +92,36 @@
 - **新結構**：`Home` | `Cycle` (內含 Activities) | `Training` | `Community` (包含勳章/里程碑) | `Settings`
 - **Cycle 頁面職責**：安排未來的訓練課表、檢視當前進度、並向下鑽取 (Drill-down) 檢視過去已完成的 **Activities**。
 
-### B. Header 與 Sidebar (Drawer) 定位重構
+### B. Header 與 Sidebar (Drawer) 定位重構 *(已實作)*
 - **Header**：
-  - 新增 **User Avatar (頭像)**：點擊可快速進入 Profile。
+  - 新增 **User Avatar (頭像)**：點擊可快速進入 Profile，並整合訓練顯示與模擬參數設定。
   - 新增 **Notification (通知鈴鐺)**：顯示好友動態、挑戰邀請或訓練提醒。
 - **Sidebar (漢堡選單)**：
-  - 統一美術風格（與 Elite Dragon 深/淺色主題一致）。
+  - 統一美術風格（與 Elite Dragon 深/淺色主題及 Glass 主題一致）。
   - 定位：作為全局設定、設備連接狀態、以及非核心輔助功能（如：匯出報告總管、關於我們）的收納處，不再與 Footer 的核心導航重疊。
 
-### C. 首頁 (Home) 視覺與客製化
-- **色彩統一**：修正目前首頁淺色/Default 顏色不一致的問題，使其與全局主題（深色運動風）統一。
-- **客製化 Widget**：Home 畫面改為卡片式儀表板。使用者可以自定義首頁顯示的元件項目（如：隱藏心率、調整順序），以符合個人訓練焦點。
-- **預設顯示**：首頁預設展示「當前週期狀態」，包含圓餅圖或進度條顯示「已完成課表」與「未完成課表」，讓使用者一開 App 就知道今天要練什麼。
+### C. 首頁 (Home) 視覺與客製化 *(已實作)*
+- **色彩統一與在地化**：修正首頁淺色/預設顏色不一致的問題，使其與全局主題（深色運動風/玻璃模態）統一，並完成全面中文化。
+- **客製化 Widget**：Home 畫面改為卡片式儀表板。使用者可以自定義首頁顯示的元件項目並調整順序，隱藏不需要的模組。
+- **預設顯示**：首頁預設展示「當前週期狀態」，包含各種活動數據，讓使用者一目了然。
 
+### D. 系統設定與個人偏好架構劃分 (Settings vs. Preferences)
+為了確保 App 架構的擴充性，設定資料的儲存與 UI 進入點將嚴格劃分為兩類：
+1. **Header Avatar 進入點 ( User Preferences 雲端個人偏好 )**
+   - **定義**：綁定於「使用者帳號（`UserProfile`）」的資料。即便使用者換手機登入，這些設定依然會被同步載入。
+   - **存放位置**：本地端存放於 `AuthRepository` (Hive `auth_persistence` Box)，未來與後端資料庫（如 Firebase/PostgreSQL）的 User 資料表同步。
+   - **包含項目**：
+     * Avatar 修改、Display Name。
+     * Home Dashboard 的順序與隱藏設定。
+     * Training 頁面的模組顯示開關與數值區間設定。
+2. **Footer Settings / Sidebar 進入點 ( App Configuration 本機裝置設定 )**
+   - **定義**：綁定於「當前硬體裝置（`AppConfig`）」的資料。通常與跨裝置同步無關。
+   - **存放位置**：本地端存放於 `SettingsRepository` (Hive `user_config` Box)，不需要上傳至雲端。
+   - **包含項目**：
+     * 藍牙感測器綁定列表 (Bluetooth Devices)。
+     * 應用程式主題 (深色/淺色/跟隨系統)單位偏好 (Metric/Imperial)。
+     * 離線快取管理 (清除快照、佔用容量)。
+     * 硬體權限管理 (推播通知、相機、GPS 定位授權)。
 ---
 
 ## 5. 領域專業知識的封裝 (Encapsulation)
@@ -122,4 +148,19 @@
 ### B. 個人化儀表板 (Dashboard Personalization)
 - **元件管理**：使用者可根據目前的訓練目標（例如：專注提高爆發力），選擇將「功率」卡片置頂，或隱藏「卡路里」等次要資訊。
 - **動態過場 (Premium Motion)**：進階版將擁有更流暢的視差捲動 (Parallax) 與 Hero 轉場動畫，提升使用時的「性能感」。
+
+---
+
+## 7. 運動軌跡與數據疊加錄影 (Telemetry Video Overlay)
+
+為了讓使用者能更直觀地回顧動作與數據的關聯，系統規劃加入類似 Garmin VIRB 或 GoPro Telemetry 的**數據疊加影片**功能。
+
+### A. 實作情境
+1. **邊錄影邊訓練 (Record with Data)**：
+   - 允許手機固定在船上，開啟相機錄影的同時，背景同時進行 `dptapp` 訓練記錄。
+   - 系統將 GPS、槳頻、速度等時間序列數據與影片的時間戳記對齊 (Synchornization)。
+2. **賽後影片合成 (Post-Workout Overlay)**：
+   - 訓練結束後，使用者選擇一段影片（匯入或剛剛拍攝的）。
+   - 系統將數據轉換為動態儀表板圖形 (Speedometer, Map Route, Heart Rate Gauge)，並使用 FFmpeg (或 Flutter 對應的 Video Export 套件) 將圖形疊加渲染 (Render) 至影片上方。
+   - 最終輸出一支具有專屬品牌風格 (Elite Dragon Theme) 的數據回顧影片，便於分享至社群媒體。
 
