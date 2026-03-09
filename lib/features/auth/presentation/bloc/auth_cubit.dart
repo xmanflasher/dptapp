@@ -50,7 +50,8 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _authRepository.loginWithMock(name);
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.unauthenticated, error: e.toString()));
+      emit(state.copyWith(
+          status: AuthStatus.unauthenticated, error: e.toString()));
     }
   }
 
@@ -59,7 +60,8 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _authRepository.loginWithGoogle();
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.unauthenticated, error: e.toString()));
+      emit(state.copyWith(
+          status: AuthStatus.unauthenticated, error: e.toString()));
     }
   }
 
@@ -68,7 +70,8 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _authRepository.loginWithLine();
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.unauthenticated, error: e.toString()));
+      emit(state.copyWith(
+          status: AuthStatus.unauthenticated, error: e.toString()));
     }
   }
 
@@ -77,11 +80,21 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _authRepository.loginWithFacebook();
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.unauthenticated, error: e.toString()));
+      emit(state.copyWith(
+          status: AuthStatus.unauthenticated, error: e.toString()));
     }
   }
 
   Future<void> logout() async {
     await _authRepository.logout();
+  }
+
+  Future<void> updateProfile(UserProfile profile) async {
+    try {
+      await _authRepository.updateProfile(profile);
+      // Stream subscription will automatically emit new AuthState
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
   }
 }

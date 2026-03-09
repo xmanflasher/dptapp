@@ -17,8 +17,20 @@ class UserConfig extends Equatable {
     this.useMetric = true,
     this.userWeight = 75.0,
     this.userAge = 30,
-    this.hrZones = const {'Z1': 110, 'Z2': 130, 'Z3': 150, 'Z4': 170, 'Z5': 190},
-    this.powerZones = const {'Z1': 100, 'Z2': 150, 'Z3': 200, 'Z4': 250, 'Z5': 300},
+    this.hrZones = const {
+      'Z1': 110,
+      'Z2': 130,
+      'Z3': 150,
+      'Z4': 170,
+      'Z5': 190
+    },
+    this.powerZones = const {
+      'Z1': 100,
+      'Z2': 150,
+      'Z3': 200,
+      'Z4': 250,
+      'Z5': 300
+    },
     this.homeWidgetOrder = const ['cycle', 'stats', 'badges'],
     this.homeWidgetVisibility = const {
       'cycle': true,
@@ -50,12 +62,15 @@ class UserConfig extends Equatable {
       userAge: map['userAge'] ?? 30,
       hrZones: Map<String, int>.from(map['hrZones'] ?? {}),
       powerZones: Map<String, int>.from(map['powerZones'] ?? {}),
-      homeWidgetOrder: List<String>.from(map['homeWidgetOrder'] ?? ['cycle', 'stats', 'badges']),
-      homeWidgetVisibility: Map<String, bool>.from(map['homeWidgetVisibility'] ?? {
-        'cycle': true,
-        'stats': true,
-        'badges': true,
-      }),
+      homeWidgetOrder: List<String>.from(
+          map['homeWidgetOrder'] ?? ['cycle', 'stats', 'badges']),
+      homeWidgetVisibility:
+          Map<String, bool>.from(map['homeWidgetVisibility'] ??
+              {
+                'cycle': true,
+                'stats': true,
+                'badges': true,
+              }),
     );
   }
 

@@ -24,7 +24,16 @@ class UserProfile extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, displayName, avatarUrl, bio, earnedBadges, isMock, subscriptionTier, preferences];
+  List<Object?> get props => [
+        id,
+        displayName,
+        avatarUrl,
+        bio,
+        earnedBadges,
+        isMock,
+        subscriptionTier,
+        preferences
+      ];
 
   int get badgeCount => earnedBadges.length;
 

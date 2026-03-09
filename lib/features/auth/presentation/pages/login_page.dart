@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:dptapp/core/theme/app_theme.dart';
@@ -14,7 +14,8 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state.status == AuthStatus.unauthenticated && state.error != null) {
+          if (state.status == AuthStatus.unauthenticated &&
+              state.error != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Login Failed: ${state.error}'),
@@ -64,10 +65,12 @@ class LoginPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white24, width: 2),
+                                  border: Border.all(
+                                      color: Colors.white24, width: 2),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.deepPurple.withValues(alpha: 0.3),
+                                      color: Colors.deepPurple
+                                          .withValues(alpha: 0.3),
                                       blurRadius: 40,
                                       spreadRadius: 10,
                                     ),
@@ -108,7 +111,9 @@ class LoginPage extends StatelessWidget {
                           "Login via Mock Mode (Dev)",
                           Icons.developer_mode,
                           Colors.blueGrey.withValues(alpha: 0.2),
-                          () => context.read<AuthCubit>().loginMock("Elite Paddler"),
+                          () => context
+                              .read<AuthCubit>()
+                              .loginMock("Elite Paddler"),
                         ),
                         const SizedBox(height: 16),
                         _buildLoginButton(
@@ -177,7 +182,8 @@ class LoginPage extends StatelessWidget {
           backgroundColor: color,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           side: const BorderSide(color: Colors.white24),
         ),
       ),

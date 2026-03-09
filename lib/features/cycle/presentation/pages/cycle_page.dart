@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dptapp/core/routers/app_routes.dart';
 
@@ -31,7 +31,8 @@ class CyclePage extends StatelessWidget {
               icon: const Icon(Icons.history),
               label: const Text('View Activity History'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
             ),
           ],

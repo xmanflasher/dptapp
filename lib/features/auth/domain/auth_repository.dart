@@ -7,5 +7,6 @@ abstract class AuthRepository {
   Future<void> loginWithLine();
   Future<void> loginWithFacebook();
   Future<void> logout();
+  Future<void> updateProfile(UserProfile profile);
   UserProfile? get currentUser;
 }

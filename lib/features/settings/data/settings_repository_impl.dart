@@ -1,11 +1,11 @@
-﻿import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:dptapp/features/settings/domain/user_config.dart';
 import 'package:dptapp/features/settings/domain/settings_repository.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
   final Box _box;
   static const String _key = 'current_config';
-  
+
   SettingsRepositoryImpl(this._box);
 
   @override

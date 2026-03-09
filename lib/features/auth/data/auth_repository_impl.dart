@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:dptapp/features/auth/domain/user_profile.dart';
 import 'package:dptapp/features/auth/domain/badge.dart';
@@ -8,7 +8,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final _controller = StreamController<UserProfile?>();
   UserProfile? _currentUser;
   late Box _authBox;
-  
+
   static const String _boxName = 'auth_persistence';
   static const String _userKey = 'current_user';
 
@@ -101,6 +101,12 @@ class AuthRepositoryImpl implements AuthRepository {
     _currentUser = null;
     await _authBox.delete(_userKey);
     _controller.add(null);
+  }
+
+  @override
+  Future<void> updateProfile(UserProfile profile) async {
+    _currentUser = profile;
+    await _saveUser();
   }
 
   Future<void> _saveUser() async {
