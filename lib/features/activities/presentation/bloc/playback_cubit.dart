@@ -43,7 +43,8 @@ class PlaybackCubit extends Cubit<PlaybackState> {
 
   void _startTimer() {
     _timer?.cancel();
-    final duration = Duration(milliseconds: (1000 / state.playbackSpeed).toInt());
+    final duration =
+        Duration(milliseconds: (1000 / state.playbackSpeed).toInt());
     _timer = Timer.periodic(duration, (timer) {
       if (state.currentIndex < state.totalCount - 1) {
         emit(state.copyWith(currentIndex: state.currentIndex + 1));

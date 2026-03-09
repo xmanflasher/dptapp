@@ -1,4 +1,4 @@
-﻿import 'package:dptapp/ini.dart';
+import 'package:dptapp/ini.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:dptapp/features/activities/domain/activities.dart';
 import 'package:dptapp/features/activities/domain/activity_repository.dart';
@@ -15,14 +15,16 @@ class ActivityRepositoryImpl implements ActivityRepository {
           // Fetch activities from CSV data source
           final List<List<dynamic>> data =
               await TxtReader().readTxt('test_data/Activities_untitle.txt');
-              //await TxtReader().readTxt('D:/project/dptapp/assets/test_data/Activities.txt');
-              //await CsvReader().readCsv('test_data/Activities_untitle.csv');
+          //await TxtReader().readTxt('D:/project/dptapp/assets/test_data/Activities.txt');
+          //await CsvReader().readCsv('test_data/Activities_untitle.csv');
           return data.map((activity) => Activity.fromCsv(activity)).toList();
         case Env.dev:
         case Env.sit:
           // Fetch activities from Hive data source
           var box = await Hive.openBox('activitiesBox');
-          return box.values.map((activity) => Activity.fromHive(activity)).toList();
+          return box.values
+              .map((activity) => Activity.fromHive(activity))
+              .toList();
         default:
           throw Exception("Unsupported environment");
       }

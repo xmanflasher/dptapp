@@ -30,5 +30,6 @@ class PlaybackState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [currentIndex, isPlaying, playbackSpeed, totalCount];
+  List<Object?> get props =>
+      [currentIndex, isPlaying, playbackSpeed, totalCount];
 }

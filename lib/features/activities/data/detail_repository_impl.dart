@@ -1,4 +1,4 @@
-﻿import 'package:dptapp/ini.dart';
+import 'package:dptapp/ini.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:dptapp/features/activities/domain/detail.dart';
 import 'package:dptapp/features/activities/domain/detail_repository.dart';
@@ -39,10 +39,15 @@ class DetailRepositoryImpl implements DetailRepository {
       switch (AppIni.currentEnv) {
         case Env.mock:
           // Inject TCX data for specific activity date if available
-          if (activityRecordDate.toIso8601String().startsWith("2024-09-04T20:25:39") || 
-              activityRecordDate.toIso8601String().startsWith("2024-09-04T12:25:39")) {
+          if (activityRecordDate
+                  .toIso8601String()
+                  .startsWith("2024-09-04T20:25:39") ||
+              activityRecordDate
+                  .toIso8601String()
+                  .startsWith("2024-09-04T12:25:39")) {
             try {
-              final tcxContent = await rootBundle.loadString('test_data/activity_16945507258.tcx');
+              final tcxContent = await rootBundle
+                  .loadString('test_data/activity_16945507258.tcx');
               return TcxParser.parseTrackpoints(tcxContent, "10");
             } catch (e) {
               print("Error loading TCX trackpoints: $e");
@@ -52,7 +57,9 @@ class DetailRepositoryImpl implements DetailRepository {
           // Fetch detail from CSV data source
           final List<List<dynamic>> data =
               await CsvReader().readCsv('test_data/garmindata_800csv.csv');
-          return data.map((detail) => Detail.fromCsvMap(detail,activityRecordDate)).toList();
+          return data
+              .map((detail) => Detail.fromCsvMap(detail, activityRecordDate))
+              .toList();
         case Env.dev:
         case Env.sit:
           // Fetch detail from Hive data source
@@ -67,7 +74,7 @@ class DetailRepositoryImpl implements DetailRepository {
       return [Detail.defaultDetail];
     }
   }
-  
+
   @override
   Future<Detail> getDetailById(String id) async {
     try {

@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import 'package:dptapp/core/parsers/date_parser.dart';
 import 'package:dptapp/core/parsers/duration_formatter.dart';
 import 'package:dptapp/features/training/domain/simulation_params.dart';
@@ -141,8 +141,9 @@ class Activity extends Equatable {
       totalWork: (hive['totalWork'] as num?)?.toDouble() ?? 0.0,
       averagePower: (hive['averagePower'] as num?)?.toDouble() ?? 0.0,
       maxImpulse: (hive['maxImpulse'] as num?)?.toDouble() ?? 0.0,
-      simulationParams: hive['simulationParams'] != null 
-          ? SimulationParams.fromMap(Map<String, dynamic>.from(hive['simulationParams']))
+      simulationParams: hive['simulationParams'] != null
+          ? SimulationParams.fromMap(
+              Map<String, dynamic>.from(hive['simulationParams']))
           : null,
     );
   }

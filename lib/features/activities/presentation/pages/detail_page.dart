@@ -1,4 +1,4 @@
-﻿import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:dptapp/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +26,8 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateMixin {
+class _DetailPageState extends State<DetailPage>
+    with SingleTickerProviderStateMixin {
   List<Color> gradientColors = [
     AppColors.contentColorCyan,
     AppColors.contentColorBlue,
@@ -46,11 +47,14 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _detailFuture = DetailRepositoryImpl().getDetailByDate(widget.activity.date);
-    
-    _currentParams = widget.activity.simulationParams ?? const SimulationParams();
+    _detailFuture =
+        DetailRepositoryImpl().getDetailByDate(widget.activity.date);
+
+    _currentParams =
+        widget.activity.simulationParams ?? const SimulationParams();
     if (_currentParams.crewDistribution.isEmpty) {
-      _currentParams = _currentParams.copyWith(crewDistribution: List.filled(20, 0.0));
+      _currentParams =
+          _currentParams.copyWith(crewDistribution: List.filled(20, 0.0));
     }
     _recalculateMetrics();
   }
@@ -86,7 +90,10 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           if (widget.activity.simulationParams != null)
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: Center(child: Text(l10n.specializedMode, style: const TextStyle(fontSize: 10, color: Colors.greenAccent))),
+              child: Center(
+                  child: Text(l10n.specializedMode,
+                      style: const TextStyle(
+                          fontSize: 10, color: Colors.greenAccent))),
             ),
         ],
       ),
@@ -115,82 +122,86 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
                           child: LineChart(mainData()),
                         ),
                       ),
-                        Wrap(
-                          spacing: 8,
-                          children: [
-                            FilterChip(
-                              label: const Text("Speed"),
-                              selected: _showSpeed,
-                              onSelected: (v) => setState(() => _showSpeed = v),
-                            ),
-                            FilterChip(
-                              label: const Text("HR"),
-                              selected: _showHR,
-                              onSelected: (v) => setState(() => _showHR = v),
-                            ),
-                            FilterChip(
-                              label: const Text("Cadence"),
-                              selected: _showCadence,
-                              onSelected: (v) => setState(() => _showCadence = v),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      Wrap(
+                        spacing: 8,
+                        children: [
+                          FilterChip(
+                            label: const Text("Speed"),
+                            selected: _showSpeed,
+                            onSelected: (v) => setState(() => _showSpeed = v),
+                          ),
+                          FilterChip(
+                            label: const Text("HR"),
+                            selected: _showHR,
+                            onSelected: (v) => setState(() => _showHR = v),
+                          ),
+                          FilterChip(
+                            label: const Text("Cadence"),
+                            selected: _showCadence,
+                            onSelected: (v) => setState(() => _showCadence = v),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        TabBar(
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        controller: _tabController,
+                        labelColor: Theme.of(context).primaryColor,
+                        unselectedLabelColor: Colors.grey,
+                        indicatorColor: AppColors.contentColorCyan,
+                        tabs: [
+                          Tab(text: l10n.summary),
+                          Tab(text: l10n.lapsData),
+                          Tab(text: l10n.routeMap),
+                          Tab(text: l10n.deepPhysicsAnalysis),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
                           controller: _tabController,
-                          labelColor: Theme.of(context).primaryColor,
-                          unselectedLabelColor: Colors.grey,
-                          indicatorColor: AppColors.contentColorCyan,
-                          tabs: [
-                            Tab(text: l10n.summary), 
-                            Tab(text: l10n.lapsData),
-                            Tab(text: l10n.routeMap),
-                            Tab(text: l10n.deepPhysicsAnalysis),
+                          children: [
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: _buildStatGrid(l10n),
+                              ),
+                            ),
+                            _buildSplitsList(l10n),
+                            _buildMapView(),
+                            _buildPhysicsTab(l10n),
                           ],
                         ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: _buildStatGrid(l10n),
-                                  ),
-                                ),
-                                _buildSplitsList(l10n),
-                                _buildMapView(),
-                                _buildPhysicsTab(l10n),
-                              ],
-                            ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              );
-            }
-          },
-        ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
   // Playback overlay has been removed for production usage
 
   Widget _buildMapView() {
     final List<LatLng> points = details
-        .where((d) => d.latitudeDegrees != null && d.longitudeDegrees != null && d.latitudeDegrees != 0 && d.longitudeDegrees != 0)
+        .where((d) =>
+            d.latitudeDegrees != null &&
+            d.longitudeDegrees != null &&
+            d.latitudeDegrees != 0 &&
+            d.longitudeDegrees != 0)
         .map((d) => LatLng(d.latitudeDegrees!, d.longitudeDegrees!))
         .toList();
 
     if (points.isEmpty) {
-      return const Center(child: Text("No GPS data available for this activity."));
+      return const Center(
+          child: Text("No GPS data available for this activity."));
     }
 
     // Determine bounds for initial zoom
@@ -233,13 +244,15 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
               point: points.first,
               width: 20,
               height: 20,
-              builder: (ctx) => const Icon(Icons.play_circle_fill, color: Colors.green, size: 20),
+              builder: (ctx) => const Icon(Icons.play_circle_fill,
+                  color: Colors.green, size: 20),
             ),
             Marker(
               point: points.last,
               width: 20,
               height: 20,
-              builder: (ctx) => const Icon(Icons.stop_circle, color: Colors.red, size: 20),
+              builder: (ctx) =>
+                  const Icon(Icons.stop_circle, color: Colors.red, size: 20),
             ),
           ],
         ),
@@ -257,7 +270,9 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Environment (Interactive)", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+              Text("Environment (Interactive)",
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
               Row(
                 children: [
                   IconButton(
@@ -267,7 +282,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
                   ),
                   TextButton(
                     onPressed: () => setState(() {
-                      _currentParams = widget.activity.simulationParams ?? const SimulationParams();
+                      _currentParams = widget.activity.simulationParams ??
+                          const SimulationParams();
                       _recalculateMetrics();
                     }),
                     child: const Text("Reset"),
@@ -278,45 +294,54 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           ),
           const SizedBox(height: 8),
           _buildSliderRow(
-            l10n.windResistance, 
-            _currentParams.windResistance, 
-            0.0, 5.0, 
-            (val) {
-              setState(() => _currentParams = _currentParams.copyWith(windResistance: val));
-              _recalculateMetrics();
-            }
-          ),
+              l10n.windResistance, _currentParams.windResistance, 0.0, 5.0,
+              (val) {
+            setState(() =>
+                _currentParams = _currentParams.copyWith(windResistance: val));
+            _recalculateMetrics();
+          }),
           _buildSliderRow(
-            l10n.waterResistance, 
-            _currentParams.waterResistance, 
-            0.0, 50.0, 
-            (val) {
-              setState(() => _currentParams = _currentParams.copyWith(waterResistance: val));
-              _recalculateMetrics();
-            }
-          ),
+              l10n.waterResistance, _currentParams.waterResistance, 0.0, 50.0,
+              (val) {
+            setState(() =>
+                _currentParams = _currentParams.copyWith(waterResistance: val));
+            _recalculateMetrics();
+          }),
           _buildSliderRow(
-            l10n.totalMass, 
-            _currentParams.totalMass, 
-            50.0, 2000.0, 
-            (val) {
-              setState(() => _currentParams = _currentParams.copyWith(crewTotalWeight: val - _currentParams.boatWeight));
-              _recalculateMetrics();
-            },
-            unit: "kg"
-          ),
+              l10n.totalMass, _currentParams.totalMass, 50.0, 2000.0, (val) {
+            setState(() => _currentParams = _currentParams.copyWith(
+                crewTotalWeight: val - _currentParams.boatWeight));
+            _recalculateMetrics();
+          }, unit: "kg"),
           const Divider(height: 32),
-          Text("Simulation Outcomes", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text("Simulation Outcomes",
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          _buildOutcomeCard("Total Work", "${_calculatedWork.toStringAsFixed(0)} J", Icons.bolt, Colors.orange),
+          _buildOutcomeCard(
+              "Total Work",
+              "${_calculatedWork.toStringAsFixed(0)} J",
+              Icons.bolt,
+              Colors.orange),
           const SizedBox(height: 8),
-          _buildOutcomeCard("Average Power", "${_calculatedPower.toStringAsFixed(1)} W", Icons.speed, Colors.blue),
+          _buildOutcomeCard(
+              "Average Power",
+              "${_calculatedPower.toStringAsFixed(1)} W",
+              Icons.speed,
+              Colors.blue),
           const SizedBox(height: 8),
-          _buildOutcomeCard("Avg Impulse", "${_calculatedImpulse.toStringAsFixed(1)} Ns", Icons.keyboard_double_arrow_right, Colors.green),
+          _buildOutcomeCard(
+              "Avg Impulse",
+              "${_calculatedImpulse.toStringAsFixed(1)} Ns",
+              Icons.keyboard_double_arrow_right,
+              Colors.green),
           const Divider(height: 32),
-          Text("Crew Designer (Beta)", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text("Crew Designer (Beta)",
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          const Text("Adjust individual seat weights to see balance impact.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const Text("Adjust individual seat weights to see balance impact.",
+              style: TextStyle(fontSize: 12, color: Colors.grey)),
           const SizedBox(height: 16),
           _buildCrewDesigner(),
         ],
@@ -340,7 +365,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
               width: 120,
               decoration: BoxDecoration(
                 color: Colors.brown.withOpacity(0.2),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(60), bottom: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(60), bottom: Radius.circular(20)),
               ),
             ),
           ),
@@ -359,17 +385,22 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
                 onTap: () => _showWeightDialog(index),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: weight > 0 ? AppColors.contentColorBlue : Colors.white10,
+                    color: weight > 0
+                        ? AppColors.contentColorBlue
+                        : Colors.white10,
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white24),
                   ),
                   child: Center(
                     child: Text(
-                      weight > 0 ? "${weight.toInt()}" : "Row\n${(index / 2 + 1).toInt()}",
+                      weight > 0
+                          ? "${weight.toInt()}"
+                          : "Row\n${(index / 2 + 1).toInt()}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: weight > 0 ? 12 : 8,
-                        fontWeight: weight > 0 ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            weight > 0 ? FontWeight.bold : FontWeight.normal,
                         color: weight > 0 ? Colors.white : Colors.white54,
                       ),
                     ),
@@ -407,10 +438,13 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
           ElevatedButton(
             onPressed: () {
-              final newList = List<double>.from(_currentParams.crewDistribution);
+              final newList =
+                  List<double>.from(_currentParams.crewDistribution);
               newList[index] = tempWeight;
               final totalCrewWeight = newList.reduce((a, b) => a + b);
               setState(() {
@@ -429,7 +463,9 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildSliderRow(String label, double value, double min, double max, ValueChanged<double> onChanged, {String unit = ""}) {
+  Widget _buildSliderRow(String label, double value, double min, double max,
+      ValueChanged<double> onChanged,
+      {String unit = ""}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -437,7 +473,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label, style: const TextStyle(fontSize: 14)),
-            Text("${value.toStringAsFixed(unit == "kg" ? 0 : 2)} $unit", style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text("${value.toStringAsFixed(unit == "kg" ? 0 : 2)} $unit",
+                style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         Slider(
@@ -450,7 +487,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildOutcomeCard(String label, String value, IconData icon, Color color) {
+  Widget _buildOutcomeCard(
+      String label, String value, IconData icon, Color color) {
     return Card(
       elevation: 0,
       color: color.withOpacity(0.1),
@@ -464,8 +502,12 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           children: [
             Icon(icon, color: color),
             const SizedBox(width: 16),
-            Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold))),
-            Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 16)),
+            Expanded(
+                child: Text(label,
+                    style: const TextStyle(fontWeight: FontWeight.bold))),
+            Text(value,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: color, fontSize: 16)),
           ],
         ),
       ),
@@ -477,20 +519,41 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(label), Text(value, style: const TextStyle(fontWeight: FontWeight.bold))],
+        children: [
+          Text(label),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold))
+        ],
       ),
     );
   }
 
   Widget _buildStatGrid(AppLocalizations l10n) {
     final List<Map<String, String>> stats = [
-      {"label": l10n.distance, "value": "${widget.activity.distance.toStringAsFixed(2)} km"},
-      {"label": l10n.calories, "value": "${widget.activity.caloriesBurned} kcal"},
-      {"label": "${l10n.heartRate} (AVG)", "value": "${widget.activity.averageHeartRate} bpm"},
-      {"label": "${l10n.heartRate} (MAX)", "value": "${widget.activity.maxHeartRate} bpm"},
-      {"label": l10n.duration, "value": (widget.activity.time).toDisplayFormat()},
+      {
+        "label": l10n.distance,
+        "value": "${widget.activity.distance.toStringAsFixed(2)} km"
+      },
+      {
+        "label": l10n.calories,
+        "value": "${widget.activity.caloriesBurned} kcal"
+      },
+      {
+        "label": "${l10n.heartRate} (AVG)",
+        "value": "${widget.activity.averageHeartRate} bpm"
+      },
+      {
+        "label": "${l10n.heartRate} (MAX)",
+        "value": "${widget.activity.maxHeartRate} bpm"
+      },
+      {
+        "label": l10n.duration,
+        "value": (widget.activity.time).toDisplayFormat()
+      },
       {"label": "Ascent", "value": "${widget.activity.totalAscent} m"},
-      {"label": "Best Pace", "value": (widget.activity.bestPace).toDisplayFormat() + " /km"},
+      {
+        "label": "Best Pace",
+        "value": (widget.activity.bestPace).toDisplayFormat() + " /km"
+      },
     ];
 
     return GridView.builder(
@@ -522,8 +585,10 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           return Card(
             child: ListTile(
               leading: CircleAvatar(child: Text("${lap.index}")),
-              title: Text("Dist: ${(lap.distanceMeters / 1000).toStringAsFixed(2)} km | Time: ${Duration(seconds: lap.totalTimeSeconds.toInt()).toDisplayFormat()}"),
-              subtitle: Text("Avg HR: ${lap.averageHeartRate} bpm | Max Speed: ${(lap.maxSpeed * 3.6).toStringAsFixed(1)} km/h"),
+              title: Text(
+                  "Dist: ${(lap.distanceMeters / 1000).toStringAsFixed(2)} km | Time: ${Duration(seconds: lap.totalTimeSeconds.toInt()).toDisplayFormat()}"),
+              subtitle: Text(
+                  "Avg HR: ${lap.averageHeartRate} bpm | Max Speed: ${(lap.maxSpeed * 3.6).toStringAsFixed(1)} km/h"),
             ),
           );
         },
@@ -535,7 +600,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
     List<Map<String, dynamic>> splits = [];
     double currentDistance = 0;
     int lastSplitTime = 0;
-    
+
     for (int i = 0; i < details.length; i++) {
       currentDistance += (details[i].speed ?? 0) / 3600; // km/s
       if (currentDistance >= (splits.length + 1) * splitDistance) {
@@ -550,7 +615,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
     }
 
     if (splits.isEmpty) {
-      return const Center(child: Text("Not enough data for splits (Min. 500m)"));
+      return const Center(
+          child: Text("Not enough data for splits (Min. 500m)"));
     }
 
     return ListView.builder(
@@ -561,8 +627,10 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
         return Card(
           child: ListTile(
             leading: CircleAvatar(child: Text("${split['index']}")),
-            title: Text("Pace: ${(split['pace'] as double).toPaceString()} /500m"),
-            subtitle: Text("Time: ${Duration(seconds: (split['time'] as int)).toDisplayFormat()}"),
+            title:
+                Text("Pace: ${(split['pace'] as double).toPaceString()} /500m"),
+            subtitle: Text(
+                "Time: ${Duration(seconds: (split['time'] as int)).toDisplayFormat()}"),
           ),
         );
       },
@@ -587,18 +655,26 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("In a production environment, this would trigger a file download. For this prototype, here is the generated CSV content:", style: TextStyle(fontSize: 12)),
+              const Text(
+                  "In a production environment, this would trigger a file download. For this prototype, here is the generated CSV content:",
+                  style: TextStyle(fontSize: 12)),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(8),
                 color: Colors.black,
-                child: Text(csvContent, style: const TextStyle(fontSize: 10, fontFamily: 'monospace', color: Colors.greenAccent)),
+                child: Text(csvContent,
+                    style: const TextStyle(
+                        fontSize: 10,
+                        fontFamily: 'monospace',
+                        color: Colors.greenAccent)),
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close")),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close")),
         ],
       ),
     );
@@ -650,7 +726,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
               int current = 0;
               String label = "";
               if (_showSpeed) {
-                if (current == barIndex) label = "${(spot.y / 10).toStringAsFixed(2)} km/h";
+                if (current == barIndex)
+                  label = "${(spot.y / 10).toStringAsFixed(2)} km/h";
                 current++;
               }
               if (_showHR && label.isEmpty) {
@@ -664,7 +741,8 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
 
               return LineTooltipItem(
                 label,
-                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
               );
             }).toList();
           },
@@ -673,41 +751,60 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
       gridData: const FlGridData(show: true, drawVerticalLine: true),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles:
+            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: true, reservedSize: 30, getTitlesWidget: (value, meta) {
-            int totalSeconds = value.toInt();
-            return SideTitleWidget(meta: meta, child: Text('${totalSeconds ~/ 60}:${(totalSeconds % 60).toString().padLeft(2, '0')}', style: const TextStyle(fontSize: 10)));
-          }),
+          sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 30,
+              getTitlesWidget: (value, meta) {
+                int totalSeconds = value.toInt();
+                return SideTitleWidget(
+                    meta: meta,
+                    child: Text(
+                        '${totalSeconds ~/ 60}:${(totalSeconds % 60).toString().padLeft(2, '0')}',
+                        style: const TextStyle(fontSize: 10)));
+              }),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: true, 
-            reservedSize: 35, 
-            interval: _calculateInterval(_calculateMaxY()),
-            getTitlesWidget: (value, meta) {
-              return Text(value.toInt().toString(), style: const TextStyle(fontSize: 10, color: Colors.grey));
-            }
-          ),
+              showTitles: true,
+              reservedSize: 35,
+              interval: _calculateInterval(_calculateMaxY()),
+              getTitlesWidget: (value, meta) {
+                return Text(value.toInt().toString(),
+                    style: const TextStyle(fontSize: 10, color: Colors.grey));
+              }),
         ),
       ),
       minY: 0,
       maxY: _calculateMaxY(),
-      borderData: FlBorderData(show: true, border: Border.all(color: const Color(0xff37434d))),
+      borderData: FlBorderData(
+          show: true, border: Border.all(color: const Color(0xff37434d))),
       lineBarsData: [
         if (_showSpeed)
           LineChartBarData(
-            spots: details.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), (entry.value.speed?.toDouble() ?? 0) * 10)).toList(),
+            spots: details
+                .asMap()
+                .entries
+                .map((entry) => FlSpot(entry.key.toDouble(),
+                    (entry.value.speed?.toDouble() ?? 0) * 10))
+                .toList(),
             isCurved: true,
             color: AppColors.contentColorBlue,
             barWidth: 3,
             dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(show: true, color: AppColors.contentColorBlue.withOpacity(0.1)),
+            belowBarData: BarAreaData(
+                show: true, color: AppColors.contentColorBlue.withOpacity(0.1)),
           ),
         if (_showHR)
           LineChartBarData(
-            spots: details.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), entry.value.value)).toList(),
+            spots: details
+                .asMap()
+                .entries
+                .map((entry) => FlSpot(entry.key.toDouble(), entry.value.value))
+                .toList(),
             isCurved: true,
             color: Colors.redAccent,
             barWidth: 2,
@@ -715,7 +812,12 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           ),
         if (_showCadence)
           LineChartBarData(
-            spots: details.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), entry.value.value2)).toList(),
+            spots: details
+                .asMap()
+                .entries
+                .map(
+                    (entry) => FlSpot(entry.key.toDouble(), entry.value.value2))
+                .toList(),
             isCurved: true,
             color: Colors.greenAccent,
             barWidth: 2,

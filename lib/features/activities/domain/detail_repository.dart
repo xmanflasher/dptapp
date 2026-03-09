@@ -1,6 +1,4 @@
-﻿import 'package:dptapp/features/activities/domain/detail.dart';
-
-
+import 'package:dptapp/features/activities/domain/detail.dart';
 
 abstract class DetailRepository {
   Future<List<Detail>> getAllDetail();

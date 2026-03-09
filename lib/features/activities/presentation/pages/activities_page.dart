@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/activities/domain/activities.dart';
 import 'package:dptapp/features/activities/domain/activity_repository.dart';
@@ -52,7 +52,7 @@ class ActivitiesPageState extends State<ActivitiesPage> {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text("No activities found"));
                 }
-                
+
                 return SingleChildScrollView(
                   child: Theme(
                     data: theme.copyWith(
@@ -61,7 +61,9 @@ class ActivitiesPageState extends State<ActivitiesPage> {
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: theme.primaryColor.withValues(alpha: 0.2), width: 1),
+                          side: BorderSide(
+                              color: theme.primaryColor.withValues(alpha: 0.2),
+                              width: 1),
                         ),
                       ),
                     ),
@@ -74,12 +76,24 @@ class ActivitiesPageState extends State<ActivitiesPage> {
                         ),
                       ),
                       columns: const [
-                        DataColumn(label: Text('Title', style: TextStyle(fontWeight: FontWeight.bold))),
-                        DataColumn(label: Text('Type', style: TextStyle(fontWeight: FontWeight.bold))),
-                        DataColumn(label: Text('Date', style: TextStyle(fontWeight: FontWeight.bold))),
-                        DataColumn(label: Text('Dist', style: TextStyle(fontWeight: FontWeight.bold))),
-                        DataColumn(label: Text('Cal', style: TextStyle(fontWeight: FontWeight.bold))),
-                        DataColumn(label: Text('Action', style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Title',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Type',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Date',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Dist',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Cal',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Action',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
                       ],
                       source: ActivityDataSource(snapshot.data!, context),
                       rowsPerPage: 10,
