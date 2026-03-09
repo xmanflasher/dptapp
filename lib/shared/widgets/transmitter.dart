@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dptapp/features/activities/data/activity_repository_impl.dart';
 import 'package:dptapp/features/activities/data/detail_repository_impl.dart';
@@ -70,9 +70,11 @@ class _TransmitterWidgetState extends State<TransmitterWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: _isRunning ? null : _startTimer, child: Text('發送')),
+            ElevatedButton(
+                onPressed: _isRunning ? null : _startTimer, child: Text('發送')),
             SizedBox(width: 10),
-            ElevatedButton(onPressed: _isRunning ? _pauseTimer : null, child: Text('暫停')),
+            ElevatedButton(
+                onPressed: _isRunning ? _pauseTimer : null, child: Text('暫停')),
             SizedBox(width: 10),
             ElevatedButton(onPressed: _stopTimer, child: Text('停止')),
           ],
@@ -109,4 +111,3 @@ class _TransmitterWidgetState extends State<TransmitterWidget> {
     );
   }
 }
-

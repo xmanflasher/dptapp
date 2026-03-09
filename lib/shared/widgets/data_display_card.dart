@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class DataDisplayCard extends StatelessWidget {
   final String label;
@@ -18,7 +18,7 @@ class DataDisplayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cardColor = color ?? theme.cardColor;
-    
+
     return Container(
       margin: const EdgeInsets.all(4),
       padding: const EdgeInsets.all(12),

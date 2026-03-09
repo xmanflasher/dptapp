@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/activities/presentation/bloc/raw_data_bloc.dart';
 import 'package:dptapp/core/enums.dart';
@@ -87,12 +87,14 @@ class RawDataManager extends StatelessWidget {
               labelText: '搜尋',
               suffixIcon: IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () =>
-                    context.read<RawDataBloc>().add(SearchData('', state.selectedBox)),
+                onPressed: () => context
+                    .read<RawDataBloc>()
+                    .add(SearchData('', state.selectedBox)),
               ),
             ),
-            onChanged: (query) =>
-                context.read<RawDataBloc>().add(SearchData(query, state.selectedBox)),
+            onChanged: (query) => context
+                .read<RawDataBloc>()
+                .add(SearchData(query, state.selectedBox)),
           ),
         );
       },
@@ -112,12 +114,15 @@ class RawDataManager extends StatelessWidget {
               child: Text("選取全部"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  context.read<RawDataBloc>().add(DeleteSelected(state.selectedBox)),
+              onPressed: () => context
+                  .read<RawDataBloc>()
+                  .add(DeleteSelected(state.selectedBox)),
               child: Text("刪除資料"),
             ),
             ElevatedButton(
-              onPressed: () => context.read<RawDataBloc>().add(ClearDatabase(state.selectedBox)),
+              onPressed: () => context
+                  .read<RawDataBloc>()
+                  .add(ClearDatabase(state.selectedBox)),
               child: Text("清除資料庫"),
             ),
           ],

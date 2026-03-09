@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/activities/presentation/bloc/playback_cubit.dart';
 import 'package:dptapp/features/activities/presentation/bloc/playback_state.dart';
@@ -20,7 +20,8 @@ class PlaybackController extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(state.isPlaying ? Icons.pause : Icons.play_arrow),
+                    icon:
+                        Icon(state.isPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: () {
                       if (state.isPlaying) {
                         context.read<PlaybackCubit>().pause();
@@ -52,7 +53,10 @@ class PlaybackController extends StatelessWidget {
                   DropdownButton<double>(
                     value: state.playbackSpeed,
                     items: [1.0, 2.0, 5.0, 10.0].map((s) {
-                      return DropdownMenuItem(value: s, child: Text("${s}x", style: const TextStyle(fontSize: 12)));
+                      return DropdownMenuItem(
+                          value: s,
+                          child: Text("${s}x",
+                              style: const TextStyle(fontSize: 12)));
                     }).toList(),
                     onChanged: (value) {
                       if (value != null) {

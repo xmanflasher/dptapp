@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class RecorderLineChartWidget extends StatefulWidget {
   @override
-  _RecorderLineChartWidgetState createState() => _RecorderLineChartWidgetState();
+  _RecorderLineChartWidgetState createState() =>
+      _RecorderLineChartWidgetState();
 }
 
 class _RecorderLineChartWidgetState extends State<RecorderLineChartWidget> {

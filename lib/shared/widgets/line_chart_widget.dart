@@ -1,7 +1,8 @@
-﻿import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dptapp/features/training/presentation/bloc/bluetooth_chart_cubit.dart';
+import 'package:dptapp/features/training/presentation/bloc/training_cubit.dart';
+import 'package:dptapp/features/training/presentation/bloc/training_state.dart';
 
 class LineChartWidget extends StatelessWidget {
   final int displaySeconds; // 顯示的秒數，5~60，預設30
@@ -9,8 +10,9 @@ class LineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BluetoothChartCubit, List<FlSpot>>(
-      builder: (context, dataPoints) {
+    return BlocBuilder<TrainingCubit, TrainingState>(
+      builder: (context, state) {
+        final dataPoints = state.performancePoints;
         final List<FlSpot> displayedData = dataPoints
             .where((point) =>
                 point.x >= (dataPoints.lastOrNull?.x ?? 0) - displaySeconds)
@@ -25,8 +27,6 @@ class LineChartWidget extends StatelessWidget {
                 lineTouchData: LineTouchData(
                   enabled: true,
                   touchTooltipData: LineTouchTooltipData(
-                    tooltipBorder:
-                        const BorderSide(color: Color(0xff37434d)),
                     getTooltipItems: (List<LineBarSpot> touchedSpots) {
                       return touchedSpots.map((spot) {
                         return LineTooltipItem(
@@ -87,9 +87,7 @@ class LineChartWidget extends StatelessWidget {
                   show: true,
                   border: Border.all(color: const Color(0xff37434d)),
                 ),
-                minX: displayedData.isEmpty
-                    ? 0
-                    : displayedData.first.x,
+                minX: displayedData.isEmpty ? 0 : displayedData.first.x,
                 maxX: displayedData.isEmpty
                     ? displaySeconds.toDouble()
                     : displayedData.last.x,

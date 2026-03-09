@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dptapp/core/theme/app_theme.dart';
 
 class CycleProgressCard extends StatelessWidget {
@@ -82,14 +82,16 @@ class CycleProgressCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryBlue),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppTheme.primaryBlue),
               minHeight: 8,
             ),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
-              const Icon(Icons.next_plan_outlined, color: AppTheme.primaryBlue, size: 16),
+              const Icon(Icons.next_plan_outlined,
+                  color: AppTheme.primaryBlue, size: 16),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -100,7 +102,8 @@ class CycleProgressCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Icon(Icons.chevron_right, color: isDark ? Colors.grey : Colors.grey.shade400, size: 20),
+              Icon(Icons.chevron_right,
+                  color: isDark ? Colors.grey : Colors.grey.shade400, size: 20),
             ],
           ),
         ],

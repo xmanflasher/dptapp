@@ -1,10 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dptapp/shared/widgets/navigation_drawer_widget.dart';
 
 class ShellNavigation extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
-  static final GlobalKey<ScaffoldState> shellScaffoldKey = GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> shellScaffoldKey =
+      GlobalKey<ScaffoldState>();
 
   const ShellNavigation({
     super.key,
@@ -21,7 +22,8 @@ class _ShellNavigationState extends State<ShellNavigation> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: widget.navigationShell.currentIndex);
+    _pageController =
+        PageController(initialPage: widget.navigationShell.currentIndex);
   }
 
   @override
@@ -34,11 +36,13 @@ class _ShellNavigationState extends State<ShellNavigation> {
     final int branches = widget.navigationShell.route.branches.length;
     int index = widget.navigationShell.currentIndex;
 
-    if (delta > 50) { // Swipe Right -> Go Left
+    if (delta > 50) {
+      // Swipe Right -> Go Left
       if (index > 0) {
         widget.navigationShell.goBranch(index - 1);
       }
-    } else if (delta < -50) { // Swipe Left -> Go Right
+    } else if (delta < -50) {
+      // Swipe Left -> Go Right
       if (index < branches - 1) {
         widget.navigationShell.goBranch(index + 1);
       }

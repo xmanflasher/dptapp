@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart' hide Badge;
+import 'package:flutter/material.dart' hide Badge;
 import 'package:dptapp/features/auth/domain/badge.dart';
 
 class BadgeCard extends StatelessWidget {
@@ -22,7 +22,8 @@ class BadgeCard extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundColor: Colors.amber.shade100,
-            child: Icon(_getIconData(badge.iconAsset), color: Colors.amber.shade800),
+            child: Icon(_getIconData(badge.iconAsset),
+                color: Colors.amber.shade800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -37,9 +38,12 @@ class BadgeCard extends StatelessWidget {
 
   IconData _getIconData(String asset) {
     switch (asset) {
-      case 'bolt': return Icons.bolt;
-      case 'wb_sunny': return Icons.wb_sunny;
-      default: return Icons.stars;
+      case 'bolt':
+        return Icons.bolt;
+      case 'wb_sunny':
+        return Icons.wb_sunny;
+      default:
+        return Icons.stars;
     }
   }
 }
