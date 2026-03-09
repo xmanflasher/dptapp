@@ -9,4 +9,5 @@ class AppRoutes {
   static const String login = '/login';
   static const String community = '/community';
   static const String cycle = '/cycle';
+  static const String dashboardSettings = '/dashboard-settings';
 }

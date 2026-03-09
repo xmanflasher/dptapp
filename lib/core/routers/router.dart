@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dptapp/ini.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +12,8 @@ import 'package:dptapp/features/activities/presentation/pages/detail_page.dart';
 import 'package:dptapp/features/training/presentation/pages/training_page.dart';
 import 'package:dptapp/features/cycle/presentation/pages/cycle_page.dart';
 import 'package:dptapp/features/community/presentation/pages/community_page.dart';
+import 'package:dptapp/features/home/presentation/pages/dashboard_settings_page.dart';
+import 'package:dptapp/features/auth/domain/user_profile.dart';
 import 'package:dptapp/features/activities/domain/activities.dart';
 import 'package:dptapp/shared/widgets/shell_navigation.dart';
 import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
@@ -35,138 +37,256 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final GlobalKey<NavigatorState> _cycleNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'cycle');
-final GlobalKey<NavigatorState> _trainingNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'training');
-final GlobalKey<NavigatorState> _communityNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'community');
-final GlobalKey<NavigatorState> _settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
+final GlobalKey<NavigatorState> _rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _homeNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'home');
+final GlobalKey<NavigatorState> _cycleNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'cycle');
+final GlobalKey<NavigatorState> _trainingNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'training');
+final GlobalKey<NavigatorState> _communityNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'community');
+final GlobalKey<NavigatorState> _settingsNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'settings');
 
 GoRouter createRouter(AuthCubit authCubit) => GoRouter(
-  navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.home,
-  refreshListenable: GoRouterRefreshStream(authCubit.stream),
-  redirect: (context, state) {
-    final authState = authCubit.state;
-    final loggingIn = state.matchedLocation == AppRoutes.login;
+      navigatorKey: _rootNavigatorKey,
+      initialLocation: AppRoutes.home,
+      refreshListenable: GoRouterRefreshStream(authCubit.stream),
+      redirect: (context, state) {
+        final authState = authCubit.state;
+        final loggingIn = state.matchedLocation == AppRoutes.login;
 
-    if (authState.status == AuthStatus.unknown) return null;
+        if (authState.status == AuthStatus.unknown) return null;
 
-    if (authState.status != AuthStatus.authenticated) {
-      return loggingIn ? null : AppRoutes.login;
-    }
+        if (authState.status != AuthStatus.authenticated) {
+          return loggingIn ? null : AppRoutes.login;
+        }
 
-    if (loggingIn) {
-      return AppRoutes.home;
-    }
+        if (loggingIn) {
+          return AppRoutes.home;
+        }
 
-    return null;
-  },
-  routes: [
-    GoRoute(
-      path: AppRoutes.login,
-      parentNavigatorKey: _rootNavigatorKey,
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: const LoginPage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ),
-    ),
-    StatefulShellRoute.indexedStack(
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state, navigationShell) {
-        return ShellNavigation(navigationShell: navigationShell);
+        return null;
       },
-      branches: [
-        StatefulShellBranch(
-          navigatorKey: _homeNavigatorKey,
-          routes: [
-            GoRoute(
-              path: AppRoutes.home,
-              builder: (context, state) => const MyHomePage(),
-            ),
-          ],
+      routes: [
+        GoRoute(
+          path: AppRoutes.login,
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const LoginPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
         ),
-        StatefulShellBranch(
-          navigatorKey: _cycleNavigatorKey,
-          routes: [
-            GoRoute(
-              path: AppRoutes.cycle,
-              builder: (context, state) => const CyclePage(),
+        StatefulShellRoute.indexedStack(
+          parentNavigatorKey: _rootNavigatorKey,
+          builder: (context, state, navigationShell) {
+            return ShellNavigation(navigationShell: navigationShell);
+          },
+          branches: [
+            StatefulShellBranch(
+              navigatorKey: _homeNavigatorKey,
               routes: [
                 GoRoute(
-                  path: 'activities',
-                  builder: (context, state) => ActivitiesPage(),
+                  path: AppRoutes.home,
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const MyHomePage(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _cycleNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: AppRoutes.cycle,
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const CyclePage(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                  ),
                   routes: [
                     GoRoute(
-                      path: 'detail',
-                      builder: (context, state) {
-                        if (state.extra is! Activity) {
-                          return ActivitiesPage();
-                        }
-                        final activity = state.extra as Activity;
-                        return DetailPage(activity: activity);
-                      },
+                      path: 'activities',
+                      pageBuilder: (context, state) => CustomTransitionPage(
+                        key: state.pageKey,
+                        child: ActivitiesPage(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                              opacity: animation, child: child);
+                        },
+                      ),
+                      routes: [
+                        GoRoute(
+                          path: 'detail',
+                          pageBuilder: (context, state) {
+                            Widget child;
+                            if (state.extra is! Activity) {
+                              child = ActivitiesPage();
+                            } else {
+                              child =
+                                  DetailPage(activity: state.extra as Activity);
+                            }
+                            return CustomTransitionPage(
+                              key: state.pageKey,
+                              child: child,
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                // Slide transition for detail pages
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
-        StatefulShellBranch(
-          navigatorKey: _trainingNavigatorKey,
-          routes: [
-            GoRoute(
-              path: AppRoutes.training,
-              builder: (context, state) => const TrainingPage(),
+            StatefulShellBranch(
+              navigatorKey: _trainingNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: AppRoutes.training,
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const TrainingPage(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _communityNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: AppRoutes.community,
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const CommunityPage(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _settingsNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: AppRoutes.settings,
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const SettingsPage(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-        StatefulShellBranch(
-          navigatorKey: _communityNavigatorKey,
-          routes: [
-            GoRoute(
-              path: AppRoutes.community,
-              builder: (context, state) => const CommunityPage(),
-            ),
-          ],
+        // Routes that should be pushed on top of everything
+        GoRoute(
+          path: AppRoutes.syncrecording,
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const SyncrecordingPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              // Slide up for recording page
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.ease;
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                  position: animation.drive(tween), child: child);
+            },
+          ),
         ),
-        StatefulShellBranch(
-          navigatorKey: _settingsNavigatorKey,
-          routes: [
-            GoRoute(
-              path: AppRoutes.settings,
-              builder: (context, state) => const SettingsPage(),
-            ),
-          ],
+        GoRoute(
+          path: AppRoutes
+              .detail, // Keeping absolute path for backward compatibility
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) {
+            Widget child;
+            if (state.extra is! Activity) {
+              child = ActivitiesPage();
+            } else {
+              child = DetailPage(activity: state.extra as Activity);
+            }
+            return CustomTransitionPage(
+              key: state.pageKey,
+              child: child,
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                const begin = Offset(1.0, 0.0);
+                const end = Offset.zero;
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: Curves.ease));
+                return SlideTransition(
+                    position: animation.drive(tween), child: child);
+              },
+            );
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.test,
+          parentNavigatorKey: _rootNavigatorKey,
+          builder: (context, state) => TestPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.dashboardSettings,
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) {
+            final profile = state.extra as UserProfile;
+            return CustomTransitionPage(
+              key: state.pageKey,
+              child: DashboardSettingsPage(profile: profile),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                // Slide up transition for settings page
+                const begin = Offset(0.0, 1.0);
+                const end = Offset.zero;
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: Curves.ease));
+                return SlideTransition(
+                    position: animation.drive(tween), child: child);
+              },
+            );
+          },
         ),
       ],
-    ),
-    // Routes that should be pushed on top of everything
-    GoRoute(
-      path: AppRoutes.syncrecording,
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const SyncrecordingPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.detail, // Keeping absolute path for backward compatibility
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) {
-        if (state.extra is! Activity) {
-          // Fallback if accessed via direct URL or reload on web
-          return ActivitiesPage(); 
-        }
-        final activity = state.extra as Activity;
-        return DetailPage(activity: activity);
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.test,
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => TestPage(),
-    ),
-  ],
-);
+    );

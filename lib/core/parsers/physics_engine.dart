@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'package:dptapp/features/training/domain/simulation_params.dart';
 
 class PerformanceMetrics {
@@ -15,7 +15,7 @@ class PerformanceMetrics {
 
 class PhysicsEngine {
   /// Calculates real-time performance metrics.
-  /// 
+  ///
   /// [currentSpeed] is in m/s.
   /// [previousSpeed] is in m/s (used for acceleration calculation).
   /// [timeDelta] is the time between samples in seconds.
@@ -27,7 +27,8 @@ class PhysicsEngine {
     required double cadence,
     required SimulationParams params,
   }) {
-    if (timeDelta <= 0) return PerformanceMetrics(work: 0, power: 0, impulse: 0);
+    if (timeDelta <= 0)
+      return PerformanceMetrics(work: 0, power: 0, impulse: 0);
 
     // 1. Total Mass (Boat + Crew)
     final double mass = params.totalMass;
@@ -38,7 +39,8 @@ class PhysicsEngine {
     // 3. Resistive Forces (Simplified Model)
     // Drag = (k_wind + k_water) * v^2
     // We assume params coefficients are applied to v^2 or v depending on the simplified model
-    final double drag = (params.windResistance + params.waterResistance) * pow(currentSpeed, 2);
+    final double drag =
+        (params.windResistance + params.waterResistance) * pow(currentSpeed, 2);
 
     // 4. Net Force required (F = m*a + drag)
     final double force = (mass * acceleration) + drag;
@@ -74,13 +76,16 @@ class PhysicsEngine {
     required SimulationParams params,
   }) {
     // Very simplified summary calculation
-    final double avgSpeed = totalDistance / (totalTime.inSeconds > 0 ? totalTime.inSeconds : 1);
-    final double drag = (params.windResistance + params.waterResistance) * pow(avgSpeed, 2);
-    final double avgForce = drag; // Assuming net acceleration is 0 over long term
-    
+    final double avgSpeed =
+        totalDistance / (totalTime.inSeconds > 0 ? totalTime.inSeconds : 1);
+    final double drag =
+        (params.windResistance + params.waterResistance) * pow(avgSpeed, 2);
+    final double avgForce =
+        drag; // Assuming net acceleration is 0 over long term
+
     final double totalWork = avgForce * totalDistance;
     final double avgPower = avgForce * avgSpeed;
-    
+
     // Impulse per stroke average
     final double strokeDuration = avgCadence > 0 ? 60 / avgCadence : 0;
     final double avgImpulse = avgForce * strokeDuration;

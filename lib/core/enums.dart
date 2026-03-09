@@ -1,4 +1,5 @@
 enum DataBox { activities, detail }
+
 enum RawDataAction { importing, searching, deleting, clearing }
 
 extension DataBoxExtension on DataBox {
@@ -10,6 +11,7 @@ extension DataBoxExtension on DataBox {
         return "明細";
     }
   }
+
   String get boxName {
     switch (this) {
       case DataBox.activities:
@@ -19,6 +21,7 @@ extension DataBoxExtension on DataBox {
     }
   }
 }
+
 const Map<DataBox, String> boxNameMap = {
   DataBox.activities: 'activitiesBox',
   DataBox.detail: 'detailBox',

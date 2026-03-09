@@ -37,8 +37,10 @@ class DbtApp extends StatelessWidget {
           BlocProvider(create: (context) => AuthCubit(authRepository)),
           BlocProvider(create: (context) => BluetoothBloc()),
           BlocProvider(create: (context) => TimerBloc()),
-          BlocProvider(create: (context) => SettingsCubit(settingsRepo)..loadSettings()),
-          BlocProvider(create: (context) => ThemeCubit(settingsRepo)..loadTheme()),
+          BlocProvider(
+              create: (context) => SettingsCubit(settingsRepo)..loadSettings()),
+          BlocProvider(
+              create: (context) => ThemeCubit(settingsRepo)..loadTheme()),
         ],
         child: const AppView(),
       ),
@@ -64,15 +66,34 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
+    return BlocBuilder<ThemeCubit, String>(
+      builder: (context, themeState) {
+        ThemeMode themeMode;
+        ThemeData? lightTheme = AppTheme.lightTheme;
+        ThemeData? darkTheme = AppTheme.darkTheme;
+
+        switch (themeState) {
+          case 'light':
+            themeMode = ThemeMode.light;
+            break;
+          case 'dark':
+            themeMode = ThemeMode.dark;
+            break;
+          case 'glass':
+            themeMode = ThemeMode.dark;
+            darkTheme = AppTheme.glassTheme;
+            break;
+          default:
+            themeMode = ThemeMode.system;
+        }
+
         return BlocBuilder<SettingsCubit, UserConfig>(
           builder: (context, settings) {
             return MaterialApp.router(
               title: 'Dragon Boat Performance',
               debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
+              theme: lightTheme,
+              darkTheme: darkTheme,
               themeMode: themeMode,
               locale: Locale(settings.language),
               localizationsDelegates: const [

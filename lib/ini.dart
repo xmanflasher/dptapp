@@ -32,5 +32,4 @@ class AppIni {
 
     return currentEnv;
   }
-  
 }

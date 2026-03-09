@@ -1,4 +1,4 @@
-﻿import 'package:dptapp/features/activities/domain/activities.dart';
+import 'package:dptapp/features/activities/domain/activities.dart';
 import 'package:dptapp/features/training/domain/training_menu.dart';
 
 class AssessmentResult {
@@ -27,11 +27,13 @@ class TrainingAssessor {
     if (menu.targetPower != null && menu.targetPower! > 0) {
       final double powerRatio = activity.averagePower / menu.targetPower!;
       if (powerRatio < 0.9) {
-        feedback.add("Average power was ${(100 - powerRatio * 100).toInt()}% below target.");
+        feedback.add(
+            "Average power was ${(100 - powerRatio * 100).toInt()}% below target.");
         targetsMet = false;
         score -= (0.9 - powerRatio);
       } else if (powerRatio > 1.1) {
-        feedback.add("Excellent intensity! You exceeded the power target by ${(powerRatio * 100 - 100).toInt()}%.");
+        feedback.add(
+            "Excellent intensity! You exceeded the power target by ${(powerRatio * 100 - 100).toInt()}%.");
       } else {
         feedback.add("On target for power intensity.");
       }
@@ -39,9 +41,11 @@ class TrainingAssessor {
 
     // 2. Check Cadence Target
     if (menu.targetCadence != null && menu.targetCadence! > 0) {
-      final double cadenceDiff = (activity.averageCadence - menu.targetCadence!).abs().toDouble();
+      final double cadenceDiff =
+          (activity.averageCadence - menu.targetCadence!).abs().toDouble();
       if (cadenceDiff > 5) {
-        feedback.add("Cadence was off by ${cadenceDiff.toInt()} BPM. Focus on the set rhythm.");
+        feedback.add(
+            "Cadence was off by ${cadenceDiff.toInt()} BPM. Focus on the set rhythm.");
         targetsMet = false;
         score -= (cadenceDiff / 40); // Penalty
       } else {
@@ -53,7 +57,8 @@ class TrainingAssessor {
     if (menu.expectedDistance != null && menu.expectedDistance! > 0) {
       final double distanceRatio = activity.distance / menu.expectedDistance!;
       if (distanceRatio < 0.95) {
-        feedback.add("Volume was low. You completed ${(distanceRatio * 100).toInt()}% of the target distance.");
+        feedback.add(
+            "Volume was low. You completed ${(distanceRatio * 100).toInt()}% of the target distance.");
         targetsMet = false;
         score -= 0.1;
       }
