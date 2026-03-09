@@ -1,26 +1,18 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/settings/domain/settings_repository.dart';
 
-class ThemeCubit extends Cubit<ThemeMode> {
+class ThemeCubit extends Cubit<String> {
   final SettingsRepository _settingsRepository;
 
-  ThemeCubit(this._settingsRepository) : super(ThemeMode.system);
+  ThemeCubit(this._settingsRepository) : super('system');
 
   Future<void> loadTheme() async {
     final settings = await _settingsRepository.getSettings();
-    emit(_parseThemeMode(settings.themeMode));
+    emit(settings.themeMode);
   }
 
-  void updateTheme(ThemeMode mode) {
+  void updateTheme(String mode) {
     emit(mode);
-  }
-
-  ThemeMode _parseThemeMode(String mode) {
-    switch (mode) {
-      case 'light': return ThemeMode.light;
-      case 'dark': return ThemeMode.dark;
-      default: return ThemeMode.system;
-    }
   }
 }

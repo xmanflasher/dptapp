@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/settings/presentation/bloc/settings_cubit.dart';
 import 'package:dptapp/features/settings/presentation/bloc/theme_cubit.dart';
@@ -27,7 +27,8 @@ class SettingsPage extends StatelessWidget {
             title: l10n.settings,
             leading: IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: () => ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
+              onPressed: () =>
+                  ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
             ),
           ),
           body: BlocBuilder<SettingsCubit, UserConfig>(
@@ -52,7 +53,8 @@ class SettingsPage extends StatelessWidget {
                   const Divider(),
                   _buildSectionTitle(l10n.units),
                   SwitchListTile(
-                    title: Text(settings.useMetric ? l10n.metric : l10n.imperial),
+                    title:
+                        Text(settings.useMetric ? l10n.metric : l10n.imperial),
                     value: settings.useMetric,
                     onChanged: (val) {
                       context.read<SettingsCubit>().updateSettings(
@@ -94,14 +96,16 @@ class SettingsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _themeButton(context, ThemeMode.light, l10n.light, Icons.light_mode),
-        _themeButton(context, ThemeMode.dark, l10n.dark, Icons.dark_mode),
-        _themeButton(context, ThemeMode.system, l10n.system, Icons.brightness_auto),
+        _themeButton(context, 'light', l10n.light, Icons.light_mode),
+        _themeButton(context, 'dark', l10n.dark, Icons.dark_mode),
+        _themeButton(context, 'glass', l10n.glass, Icons.blur_on),
+        _themeButton(context, 'system', l10n.system, Icons.brightness_auto),
       ],
     );
   }
 
-  Widget _themeButton(BuildContext context, ThemeMode mode, String label, IconData icon) {
+  Widget _themeButton(
+      BuildContext context, String mode, String label, IconData icon) {
     final currentMode = context.watch<ThemeCubit>().state;
     final isSelected = currentMode == mode;
     return Column(
@@ -112,40 +116,47 @@ class SettingsPage extends StatelessWidget {
             context.read<ThemeCubit>().updateTheme(mode);
             final settings = context.read<SettingsCubit>().state;
             context.read<SettingsCubit>().updateSettings(
-              settings.copyWith(themeMode: mode.name),
-            );
+                  settings.copyWith(themeMode: mode),
+                );
           },
         ),
-        Text(label, style: TextStyle(fontSize: 12, color: isSelected ? Colors.blue : Colors.grey)),
+        Text(label,
+            style: TextStyle(
+                fontSize: 12, color: isSelected ? Colors.blue : Colors.grey)),
       ],
     );
   }
 
   void _showWeightDialog(BuildContext context, UserConfig settings) {
-    final controller = TextEditingController(text: settings.userWeight.toString());
+    final l10n = AppLocalizations.of(context)!;
+    final controller =
+        TextEditingController(text: settings.userWeight.toString());
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Update Weight"),
+        title: Text(l10n.updateWeight),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(suffixText: "kg"),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel)),
           TextButton(
             onPressed: () {
-              final weight = double.tryParse(controller.text) ?? settings.userWeight;
-              context.read<SettingsCubit>().updateSettings(settings.copyWith(userWeight: weight));
+              final weight =
+                  double.tryParse(controller.text) ?? settings.userWeight;
+              context
+                  .read<SettingsCubit>()
+                  .updateSettings(settings.copyWith(userWeight: weight));
               Navigator.pop(context);
             },
-            child: const Text("Apply"),
+            child: Text(l10n.apply),
           ),
         ],
       ),
     );
   }
 }
-
-
