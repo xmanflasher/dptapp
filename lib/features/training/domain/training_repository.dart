@@ -1,4 +1,4 @@
-﻿import 'package:dptapp/features/training/domain/training_cycle.dart';
+import 'package:dptapp/features/training/domain/training_cycle.dart';
 import 'package:dptapp/features/training/domain/training_menu.dart';
 import 'package:dptapp/features/training/domain/training_schedule.dart';
 
@@ -14,7 +14,8 @@ abstract class TrainingRepository {
   Future<void> deleteMenu(String id);
 
   // Schedules
-  Future<List<TrainingSchedule>> getSchedulesInRange(DateTime start, DateTime end);
+  Future<List<TrainingSchedule>> getSchedulesInRange(
+      DateTime start, DateTime end);
   Future<void> saveSchedule(TrainingSchedule schedule);
   Future<void> deleteSchedule(String id);
   Future<void> markScheduleCompleted(String scheduleId, String activityId);

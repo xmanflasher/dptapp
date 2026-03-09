@@ -5,7 +5,8 @@ class SimulationParams extends Equatable {
   final double waterResistance; // N or a coefficient
   final double boatWeight; // kg
   final double crewTotalWeight; // kg
-  final List<double> crewDistribution; // Weights per seat or a center of gravity offset
+  final List<double>
+      crewDistribution; // Weights per seat or a center of gravity offset
 
   const SimulationParams({
     this.windResistance = 0.0,

@@ -43,12 +43,23 @@ class TrainingMenu extends Equatable {
       type: TrainingType.values[map['type']],
       targetPower: map['targetPower'],
       targetCadence: map['targetCadence'],
-      expectedDuration: map['expectedDuration'] != null ? Duration(seconds: map['expectedDuration']) : null,
+      expectedDuration: map['expectedDuration'] != null
+          ? Duration(seconds: map['expectedDuration'])
+          : null,
       expectedDistance: map['expectedDistance'],
       description: map['description'] ?? '',
     );
   }
 
   @override
-  List<Object?> get props => [id, name, type, targetPower, targetCadence, expectedDuration, expectedDistance, description];
+  List<Object?> get props => [
+        id,
+        name,
+        type,
+        targetPower,
+        targetCadence,
+        expectedDuration,
+        expectedDistance,
+        description
+      ];
 }

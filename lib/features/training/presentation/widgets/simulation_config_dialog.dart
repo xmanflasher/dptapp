@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dptapp/features/training/domain/simulation_params.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SimulationConfigDialog extends StatefulWidget {
   final SimulationParams currentParams;
@@ -27,20 +28,27 @@ class _SimulationConfigDialogState extends State<SimulationConfigDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Simulation Parameters'),
+      title: Text(l10n.simParameters),
       content: SingleChildScrollView(
         child: Column(
           children: [
-            _buildSlider('Wind Resistance', wind, 0, 10, (v) => setState(() => wind = v)),
-            _buildSlider('Water Resistance', water, 0, 10, (v) => setState(() => water = v)),
-            _buildSlider('Boat Weight (kg)', boatWeight, 100, 1000, (v) => setState(() => boatWeight = v)),
-            _buildSlider('Crew Total Weight (kg)', crewWeight, 0, 2000, (v) => setState(() => crewWeight = v)),
+            _buildSlider(l10n.windResistanceLabel, wind, 0, 10,
+                (v) => setState(() => wind = v)),
+            _buildSlider(l10n.waterResistanceLabel, water, 0, 10,
+                (v) => setState(() => water = v)),
+            _buildSlider(l10n.boatWeightLabel, boatWeight, 100, 1000,
+                (v) => setState(() => boatWeight = v)),
+            _buildSlider(l10n.crewWeightLabel, crewWeight, 0, 2000,
+                (v) => setState(() => crewWeight = v)),
           ],
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel)),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(
@@ -53,13 +61,14 @@ class _SimulationConfigDialogState extends State<SimulationConfigDialog> {
               ),
             );
           },
-          child: const Text('Apply'),
+          child: Text(l10n.apply),
         ),
       ],
     );
   }
 
-  Widget _buildSlider(String label, double value, double min, double max, ValueChanged<double> onChanged) {
+  Widget _buildSlider(String label, double value, double min, double max,
+      ValueChanged<double> onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

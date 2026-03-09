@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/training/presentation/bloc/bluetooth_chart_cubit.dart';
 import 'package:dptapp/core/services/bluetooth_service.dart';
@@ -22,7 +22,8 @@ class SyncrecordingPage extends StatelessWidget {
             appBar: AppBar(
               title: const Text(
                 "Sync Recording",
-                style: TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
               ),
               actions: [
                 if (profile != null)
@@ -30,9 +31,15 @@ class SyncrecordingPage extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 16.0),
                     child: CircleAvatar(
                       radius: 18,
-                      backgroundImage: profile.avatarUrl != null ? NetworkImage(profile.avatarUrl!) : null,
-                      backgroundColor: theme.primaryColor.withValues(alpha: 0.2),
-                      child: profile.avatarUrl == null ? Icon(Icons.person, size: 20, color: theme.primaryColor) : null,
+                      backgroundImage: profile.avatarUrl != null
+                          ? NetworkImage(profile.avatarUrl!)
+                          : null,
+                      backgroundColor:
+                          theme.primaryColor.withValues(alpha: 0.2),
+                      child: profile.avatarUrl == null
+                          ? Icon(Icons.person,
+                              size: 20, color: theme.primaryColor)
+                          : null,
                     ),
                   ),
               ],

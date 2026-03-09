@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/core/services/bluetooth_device_service.dart';
 import 'package:equatable/equatable.dart';
 

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dptapp/features/training/presentation/bloc/training_cubit.dart';
 import 'package:dptapp/features/training/presentation/bloc/training_state.dart';
@@ -12,14 +12,19 @@ import 'package:dptapp/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:dptapp/core/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dptapp/core/routers/app_routes.dart';
+import 'package:dptapp/features/auth/domain/user_profile.dart';
+import 'package:dptapp/features/training/presentation/widgets/training_display_settings_sheet.dart';
+import 'package:dptapp/shared/widgets/line_chart_widget.dart';
 
 class TrainingPage extends StatelessWidget {
   const TrainingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TrainingCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => TrainingCubit()),
+      ],
       child: const _TrainingView(),
     );
   }
@@ -36,39 +41,92 @@ class _TrainingView extends StatelessWidget {
       builder: (context, authState) {
         final profile = authState.user;
         final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
 
         return Scaffold(
-          backgroundColor: AppTheme.background,
+          backgroundColor:
+              isDark ? AppTheme.background : const Color(0xFFF2F2F7),
           appBar: GlobalAppBar(
             title: l10n.training,
             leading: IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: () => ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
+              onPressed: () =>
+                  ShellNavigation.shellScaffoldKey.currentState?.openDrawer(),
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings_input_component),
-                onPressed: () => _showSimConfig(context),
-              ),
-            ],
+            actions: const [], // Settings moved to Avatar menu
           ),
           body: BlocBuilder<TrainingCubit, TrainingState>(
             builder: (context, state) {
               final settings = context.watch<SettingsCubit>().state;
-              final double targetPower = settings.powerZones['Z3']?.toDouble() ?? 200.0;
+              final double targetPower =
+                  settings.powerZones['Z3']?.toDouble() ?? 200.0;
+
+              final trainingConfig =
+                  profile?.preferences['training_config'] as Map? ?? {};
+
+              final visibleMetrics = List<String>.from(
+                  trainingConfig['visible_metrics'] ??
+                      ['speed', 'cadence', 'power', 'work', 'sync']);
+
+              final layoutOrder = List<String>.from(
+                  trainingConfig['layout_order'] ?? ['hud', 'chart']);
+              final visibleModules = List<String>.from(
+                  trainingConfig['visible_modules'] ?? ['hud', 'chart']);
+
+              final interval = trainingConfig['chart_interval'] ?? 30;
 
               return Column(
                 children: [
                   Expanded(
-                    child: Center(
-                      child: LiveHUD(
-                        speed: state.speed,
-                        cadence: state.cadence,
-                        power: state.power,
-                        work: state.work,
-                        impulse: state.impulse,
-                        targetPower: targetPower,
-                      ),
+                    child: ListView(
+                      padding: const EdgeInsets.all(16),
+                      children: layoutOrder.map((item) {
+                        if (!visibleModules.contains(item)) {
+                          return const SizedBox.shrink();
+                        }
+
+                        if (item == 'hud') {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: LiveHUD(
+                              speed: state.speed,
+                              cadence: state.cadence,
+                              power: state.power,
+                              work: state.work,
+                              impulse: state.impulse,
+                              targetPower: targetPower,
+                              visibleMetrics: visibleMetrics,
+                              isSyncing: state.isRecording,
+                              sessionTitle: state.sessionTitle,
+                            ),
+                          );
+                        } else if (item == 'chart') {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text("PERFORMANCE TREND",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey)),
+                                    const SizedBox(height: 16),
+                                    LineChartWidget(displaySeconds: interval),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      }).toList(),
                     ),
                   ),
                   _buildRecordingControls(context, state, l10n),
@@ -85,14 +143,16 @@ class _TrainingView extends StatelessWidget {
     final currentParams = context.read<TrainingCubit>().state.simulationParams;
     final result = await showDialog(
       context: context,
-      builder: (context) => SimulationConfigDialog(currentParams: currentParams),
+      builder: (context) =>
+          SimulationConfigDialog(currentParams: currentParams),
     );
     if (result != null) {
       context.read<TrainingCubit>().updateSimulationParams(result);
     }
   }
 
-  Widget _buildRecordingControls(BuildContext context, TrainingState state, AppLocalizations l10n) {
+  Widget _buildRecordingControls(
+      BuildContext context, TrainingState state, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
@@ -111,7 +171,8 @@ class _TrainingView extends StatelessWidget {
               }
             },
             icon: Icon(state.isRecording ? Icons.stop : Icons.play_arrow),
-            label: Text(state.isRecording ? l10n.stopSession : l10n.startSession),
+            label:
+                Text(state.isRecording ? l10n.stopSession : l10n.startSession),
             style: ElevatedButton.styleFrom(
               backgroundColor: state.isRecording ? Colors.red : Colors.green,
               foregroundColor: Colors.white,
@@ -127,5 +188,11 @@ class _TrainingView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showDisplaySettings(BuildContext context, UserProfile? profile) {
+    if (profile != null) {
+      TrainingDisplaySettingsSheet.show(context, profile);
+    }
   }
 }

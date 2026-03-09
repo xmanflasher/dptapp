@@ -24,11 +24,12 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   void _startTimer() {
     final cubit = context.read<BluetoothChartCubit>();
-    cubit
-        .setInterval(Duration(milliseconds: (_intervalSeconds * 1000).toInt()));
+    cubit.setInterval(
+        Duration(milliseconds: (_intervalSeconds * 1000).toInt()));
     _timer?.cancel();
     _timer = Timer.periodic(cubit.interval, (_) {
-      cubit.addDataPoint();
+      // The cubit now handles its own internal polling. 
+      // We just update the local UI state for stopwatch and acceleration.
       setState(() {
         _elapsedMicroseconds += cubit.interval.inMicroseconds;
         final newSpeed = cubit.getLatestSpeed();
@@ -64,9 +65,6 @@ class _TimerWidgetState extends State<TimerWidget> {
       cubit.setDataSource(BluetoothService());
     } else {
       cubit.setDataSource(MockService());
-    }
-    if (_isRunning) {
-      _startTimer();
     }
   }
 

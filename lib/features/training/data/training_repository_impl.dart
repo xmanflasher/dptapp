@@ -1,4 +1,4 @@
-﻿import 'package:hive/hive.dart';
+import 'package:hive/hive.dart';
 import 'package:dptapp/features/training/domain/training_cycle.dart';
 import 'package:dptapp/features/training/domain/training_menu.dart';
 import 'package:dptapp/features/training/domain/training_schedule.dart';
@@ -44,11 +44,13 @@ class HiveTrainingRepository implements TrainingRepository {
   }
 
   @override
-  Future<List<TrainingSchedule>> getSchedulesInRange(DateTime start, DateTime end) async {
+  Future<List<TrainingSchedule>> getSchedulesInRange(
+      DateTime start, DateTime end) async {
     return _scheduleBox.values
         .map((e) => TrainingSchedule.fromMap(Map<String, dynamic>.from(e)))
-        .where((s) => s.date.isAfter(start.subtract(const Duration(days: 1))) && 
-                      s.date.isBefore(end.add(const Duration(days: 1))))
+        .where((s) =>
+            s.date.isAfter(start.subtract(const Duration(days: 1))) &&
+            s.date.isBefore(end.add(const Duration(days: 1))))
         .toList();
   }
 
@@ -63,10 +65,12 @@ class HiveTrainingRepository implements TrainingRepository {
   }
 
   @override
-  Future<void> markScheduleCompleted(String scheduleId, String activityId) async {
+  Future<void> markScheduleCompleted(
+      String scheduleId, String activityId) async {
     final scheduleData = _scheduleBox.get(scheduleId);
     if (scheduleData != null) {
-      final schedule = TrainingSchedule.fromMap(Map<String, dynamic>.from(scheduleData));
+      final schedule =
+          TrainingSchedule.fromMap(Map<String, dynamic>.from(scheduleData));
       final updated = TrainingSchedule(
         id: schedule.id,
         menuId: schedule.menuId,

@@ -1,4 +1,5 @@
 ﻿import 'package:equatable/equatable.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:dptapp/features/training/domain/simulation_params.dart';
 import 'package:dptapp/core/parsers/physics_engine.dart';
 
@@ -11,6 +12,8 @@ class TrainingState extends Equatable {
   final SimulationParams simulationParams;
   final double targetPower;
   final bool isRecording;
+  final List<FlSpot> performancePoints;
+  final String sessionTitle;
 
   const TrainingState({
     this.speed = 0.0,
@@ -21,6 +24,8 @@ class TrainingState extends Equatable {
     this.simulationParams = const SimulationParams(),
     this.targetPower = 200.0, // Default target
     this.isRecording = false,
+    this.performancePoints = const [],
+    this.sessionTitle = '',
   });
 
   TrainingState copyWith({
@@ -32,6 +37,8 @@ class TrainingState extends Equatable {
     SimulationParams? simulationParams,
     double? targetPower,
     bool? isRecording,
+    List<FlSpot>? performancePoints,
+    String? sessionTitle,
   }) {
     return TrainingState(
       speed: speed ?? this.speed,
@@ -42,6 +49,8 @@ class TrainingState extends Equatable {
       simulationParams: simulationParams ?? this.simulationParams,
       targetPower: targetPower ?? this.targetPower,
       isRecording: isRecording ?? this.isRecording,
+      performancePoints: performancePoints ?? this.performancePoints,
+      sessionTitle: sessionTitle ?? this.sessionTitle,
     );
   }
 
@@ -55,5 +64,7 @@ class TrainingState extends Equatable {
         simulationParams,
         targetPower,
         isRecording,
+        performancePoints,
+        sessionTitle,
       ];
 }
